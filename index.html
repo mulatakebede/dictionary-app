@@ -932,6 +932,12 @@
         return canvas.toDataURL();
     }
     // Use this to generate and download icons if needed
+
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js');
+    }
+
 </script>
 
 </head>
