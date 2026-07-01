@@ -8,13 +8,15 @@
   "theme_color": "#f7971e",
   "orientation": "portrait",
   "icons": [
-    {"src": "icon-72.png", "sizes": "72x72", "type": "image/png"},
-    {"src": "icon-96.png", "sizes": "96x96", "type": "image/png"},
-    {"src": "icon-128.png", "sizes": "128x128", "type": "image/png"},
-    {"src": "icon-144.png", "sizes": "144x144", "type": "image/png"},
-    {"src": "icon-152.png", "sizes": "152x152", "type": "image/png"},
-    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
-    {"src": "icon-384.png", "sizes": "384x384", "type": "image/png"},
-    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%23f7971e'/%3E%3Ctext x='256' y='340' font-size='280' text-anchor='middle' font-family='Arial'%3E📖%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='38' fill='%23f7971e'/%3E%3Ctext x='96' y='128' font-size='105' text-anchor='middle' font-family='Arial'%3E📖%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
   ]
 }
