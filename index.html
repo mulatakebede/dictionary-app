@@ -141,7 +141,7 @@
         }
 
         /* ============================
-               INSTALL APP BUTTON (NEW)
+               INSTALL APP BANNER (ALWAYS VISIBLE)
             ============================ */
         .install-banner {
             background: linear-gradient(135deg, rgba(247, 151, 30, 0.12), rgba(79, 195, 247, 0.08));
@@ -708,7 +708,7 @@
         }
 
         /* ============================
-               CSV UPLOAD (Hidden by default - only shows if no data)
+               CSV UPLOAD
             ============================ */
         .csv-upload-area {
             background: var(--bg-card);
@@ -717,6 +717,7 @@
             padding: 30px 20px;
             text-align: center;
             margin-top: 10px;
+            display: none;
         }
 
         .csv-upload-area .icon {
@@ -986,10 +987,10 @@
             </div>
         </div>
 
-        <!-- ===== INSTALL APP BANNER (NEW) ===== -->
-        <div class="install-banner" id="installBanner" style="display:none;">
+        <!-- ===== INSTALL APP BANNER (ALWAYS VISIBLE) ===== -->
+        <div class="install-banner" id="installBanner">
             <div class="text">
-                📱 <strong>Install App</strong> — Add to your home screen for offline use
+                📱 <strong>Install App</strong> — Add to home screen for offline use
             </div>
             <div style="display:flex;align-items:center;gap:8px;">
                 <button class="install-btn" id="installBtn">📲 Install</button>
@@ -1086,8 +1087,8 @@
             </div>
         </div>
 
-        <!-- ===== CSV UPLOAD (HIDDEN - only shows if no data) ===== -->
-        <div class="csv-upload-area hidden" id="csvUploadArea">
+        <!-- ===== CSV UPLOAD ===== -->
+        <div class="csv-upload-area" id="csvUploadArea">
             <div class="icon">📂</div>
             <div class="text">የእርስዎን CSV ፋይል ያስገቡ</div>
             <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">Upload your CSV file with dictionary data</div>
@@ -1221,7 +1222,7 @@
             console.log(`✅ Dictionary loaded: ${wordCount} unique words, ${totalWords} entries`);
 
             // Hide upload area - data is already loaded from dictionary-data.js
-            document.getElementById('csvUploadArea').classList.add('hidden');
+            document.getElementById('csvUploadArea').style.display = 'none';
             document.getElementById('uploadStatus').textContent = `✅ ${wordCount} ቃላት ተጭነዋል`;
 
             // Init features
@@ -1310,7 +1311,7 @@
         });
 
         // ================================================================
-        //  APP STATE - PERSISTENT (data stays on refresh)
+        //  APP STATE - PERSISTENT
         // ================================================================
 
         let currentFilter = 'all';
@@ -1342,25 +1343,21 @@
         let synth = window.speechSynthesis;
 
         // ================================================================
-        //  PWA INSTALL (NEW)
+        //  PWA INSTALL
         // ================================================================
 
         // Listen for the beforeinstallprompt event
         window.addEventListener('beforeinstallprompt', function(e) {
-            // Prevent the mini-infobar from appearing on mobile
             e.preventDefault();
-            // Stash the event so it can be triggered later
             deferredPrompt = e;
-            // Show the install banner
+            // Show the install banner (it's already visible)
             installBanner.style.display = 'flex';
         });
 
         // Install button click handler
         installBtn.addEventListener('click', function() {
             if (deferredPrompt) {
-                // Show the install prompt
                 deferredPrompt.prompt();
-                // Wait for the user to respond to the prompt
                 deferredPrompt.userChoice.then(function(choiceResult) {
                     if (choiceResult.outcome === 'accepted') {
                         showToast('📲 App installed successfully!');
@@ -1371,10 +1368,32 @@
                     deferredPrompt = null;
                 });
             } else {
-                // If not in PWA mode, show a helpful message
-                showToast('📱 Open this page in Chrome and tap "Add to Home Screen"');
+                // Fallback: Show instructions for manual install
+                showManualInstallInstructions();
             }
         });
+
+        function showManualInstallInstructions() {
+            // Check if browser supports the install prompt
+            if (window.navigator && window.navigator.standalone) {
+                // Already in standalone mode (iOS)
+                showToast('📱 App is already installed!');
+                installBanner.style.display = 'none';
+                return;
+            }
+
+            // Check if running in Chrome on Android
+            const isChrome = /Chrome/.test(navigator.userAgent) && /Android/.test(navigator.userAgent);
+            const isSafari = /Safari/.test(navigator.userAgent) && /iPhone|iPad/.test(navigator.userAgent);
+
+            if (isChrome) {
+                showToast('📱 Tap the menu (3 dots) → "Add to Home Screen"');
+            } else if (isSafari) {
+                showToast('📱 Tap the share icon → "Add to Home Screen"');
+            } else {
+                showToast('📱 Open this page in Chrome for install option');
+            }
+        }
 
         // Dismiss install banner
         dismissInstall.addEventListener('click', function() {
@@ -1929,7 +1948,7 @@
                 historyList.innerHTML = `
                     <div class="empty-panel">
                         <div class="icon">🕐</div>
-                        <div class="text">ምንም የፍለጋ ታሪክ የለም</div>
+                        <div class="text">ምንም የፍለጋ ታሪክ የሉም</div>
                     </div>
                 `;
                 return;
@@ -2073,7 +2092,7 @@
             document.getElementById('uploadStatus').className = 'upload-status';
         } else {
             // If no data file, show upload area
-            document.getElementById('csvUploadArea').classList.remove('hidden');
+            document.getElementById('csvUploadArea').style.display = 'block';
             resultsEl.innerHTML = `
                 <div class="no-result">
                     <div class="icon">📂</div>
