@@ -8,21 +8,1150 @@
     <meta name="theme-color" content="#f7971e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <!-- ... (your existing CSS here) ... -->
     <style>
-        /* ... (your existing styles) ... */
+        /* ============================
+               THEME VARIABLES
+            ============================ */
+        :root {
+            --bg-primary: #0f0c29;
+            --bg-secondary: #1a1a3e;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-input: rgba(255, 255, 255, 0.05);
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #666666;
+            --border-color: rgba(255, 255, 255, 0.06);
+            --accent: #f7971e;
+            --accent2: #4fc3f7;
+            --shadow: rgba(0, 0, 0, 0.7);
+            --nav-bg: rgba(12, 10, 35, 0.97);
+            --toast-bg: rgba(0, 0, 0, 0.85);
+            --filter-bg: rgba(255, 255, 255, 0.03);
+            --scrollbar: rgba(255, 255, 255, 0.08);
+            --sidebar-bg: #1a1a2e;
+            --sidebar-hover: rgba(247, 151, 30, 0.1);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f0f0f5;
+            --bg-secondary: #e8e8f0;
+            --bg-card: rgba(0, 0, 0, 0.04);
+            --bg-input: rgba(0, 0, 0, 0.05);
+            --text-primary: #1a1a2e;
+            --text-secondary: #333333;
+            --text-muted: #888888;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --shadow: rgba(0, 0, 0, 0.15);
+            --nav-bg: rgba(240, 240, 245, 0.97);
+            --toast-bg: rgba(0, 0, 0, 0.85);
+            --filter-bg: rgba(0, 0, 0, 0.03);
+            --scrollbar: rgba(0, 0, 0, 0.1);
+            --sidebar-bg: #e8e8f0;
+            --sidebar-hover: rgba(247, 151, 30, 0.15);
+        }
+
+        /* ============================
+               BASE STYLES
+            ============================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* ============================
+               SIDEBAR
+            ============================ */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            min-height: 100vh;
+            flex-shrink: 0;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px 16px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .sidebar-header .badge {
+            display: inline-block;
+            font-size: 11px;
+            color: var(--text-muted);
+            background: var(--filter-bg);
+            padding: 2px 12px;
+            border-radius: 20px;
+            margin-top: 4px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 8px;
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin: 2px 0;
+        }
+
+        .sidebar-nav button {
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            padding: 10px 16px;
+            font-size: 15px;
+            font-family: inherit;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-nav button:hover {
+            background: var(--sidebar-hover);
+            color: var(--text-primary);
+        }
+
+        .sidebar-nav button.active {
+            background: rgba(247, 151, 30, 0.12);
+            color: var(--accent);
+        }
+
+        .sidebar-nav button .icon {
+            font-size: 18px;
+            width: 28px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* ============================
+               INSTALL BUTTON IN SIDEBAR
+            ============================ */
+        .install-section {
+            padding: 12px 16px 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .install-btn {
+            width: 100%;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            border: none;
+            border-radius: 30px;
+            color: #1a1a2e;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            box-shadow: 0 2px 12px rgba(247, 151, 30, 0.25);
+        }
+
+        .install-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(247, 151, 30, 0.35);
+        }
+
+        .install-btn:active {
+            transform: scale(0.98);
+        }
+
+        .install-btn.installed {
+            background: #4a6741;
+            color: #f5efdc;
+            box-shadow: none;
+        }
+
+        .install-text {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 6px;
+            opacity: 0.7;
+        }
+
+        /* ============================
+               MAIN CONTENT
+            ============================ */
+        .main-content {
+            flex: 1;
+            padding: 25px 30px 100px;
+            overflow-y: auto;
+            max-width: calc(100% - 280px);
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .app-header h1 {
+            font-size: 24px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-header .header-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .header-btn {
+            padding: 6px 14px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-muted);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .header-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .header-btn.active {
+            background: rgba(247, 151, 30, 0.12);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ============================
+               SEARCH
+            ============================ */
+        .search-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 14px 18px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* ============================
+               LETTER NAV
+            ============================ */
+        .letter-nav {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+
+        .letter-nav button {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .letter-nav button:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .letter-nav button.active {
+            background: rgba(247, 151, 30, 0.2);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ============================
+               FILTERS
+            ============================ */
+        .filters {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .filter-btn {
+            padding: 5px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background: var(--filter-bg);
+            color: var(--text-muted);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .filter-btn.active {
+            background: rgba(247, 151, 30, 0.12);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ============================
+               STATS
+            ============================ */
+        .stats {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .stats span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ============================
+               RESULTS
+            ============================ */
+        .result-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-card .word-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .result-card .word {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .result-card .pos {
+            font-size: 12px;
+            color: var(--accent2);
+            background: rgba(79, 195, 247, 0.1);
+            padding: 2px 12px;
+            border-radius: 20px;
+        }
+
+        .result-card .amharic {
+            font-size: 19px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .result-card .meaning {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .result-card .root {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            opacity: 0.6;
+        }
+
+        .result-card .actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .action-btn.fav {
+            color: var(--accent);
+            border-color: rgba(247, 151, 30, 0.2);
+        }
+
+        /* ============================
+               PAGINATION
+            ============================ */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 0 20px;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            padding: 8px 18px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: rgba(247, 151, 30, 0.12);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .pagination .page-info {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .pagination .page-info span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ============================
+               PANELS
+            ============================ */
+        .panel {
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent);
+            padding: 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .panel-title .clear-btn {
+            font-size: 13px;
+            color: #e74c3c;
+            cursor: pointer;
+            opacity: 0.5;
+            background: none;
+            border: none;
+        }
+
+        .panel-title .clear-btn:hover {
+            opacity: 1;
+        }
+
+        .panel-title .export-btn {
+            font-size: 13px;
+            color: var(--accent);
+            cursor: pointer;
+            opacity: 0.7;
+            background: none;
+            border: none;
+        }
+
+        .panel-title .export-btn:hover {
+            opacity: 1;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: var(--bg-card);
+            border-radius: 10px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        .list-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .list-item .word {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .list-item .meaning {
+            font-size: 13px;
+            color: var(--text-muted);
+            max-width: 45%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .list-item .remove-btn {
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px 8px;
+            background: none;
+            border: none;
+        }
+
+        .list-item .remove-btn:hover {
+            color: #e74c3c;
+        }
+
+        .empty-panel {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-panel .icon {
+            font-size: 32px;
+        }
+
+        .empty-panel .text {
+            font-size: 15px;
+            margin-top: 6px;
+        }
+
+        /* ============================
+               NO RESULT / LOADING
+            ============================ */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .loading .spinner {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading .text {
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .no-result {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+
+        .no-result .icon {
+            font-size: 40px;
+        }
+
+        .no-result .text {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        /* ============================
+               TOAST
+            ============================ */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--toast-bg);
+            padding: 10px 22px;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 14px;
+            display: none;
+            z-index: 3000;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            white-space: nowrap;
+            max-width: 90%;
+        }
+
+        .toast.show {
+            display: block;
+            animation: toastIn 0.25s ease;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* ============================
+               SCROLLBAR
+            ============================ */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar);
+            border-radius: 10px;
+        }
+
+        /* ============================
+               RESPONSIVE
+            ============================ */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                top: 0;
+                bottom: 0;
+                z-index: 100;
+                transition: left 0.3s ease;
+                height: 100vh;
+            }
+
+            .sidebar.open {
+                left: 0;
+                box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
+            }
+
+            .main-content {
+                max-width: 100%;
+                padding: 15px 16px 100px;
+            }
+
+            .menu-toggle {
+                display: flex !important;
+            }
+
+            .app-header h1 {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .result-card .word {
+                font-size: 19px;
+            }
+            .result-card .amharic {
+                font-size: 17px;
+            }
+            .letter-nav button {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+            }
+            .filter-btn {
+                font-size: 11px;
+                padding: 4px 10px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .menu-toggle {
+                display: none !important;
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            font-size: 24px;
+            padding: 4px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            z-index: 200;
+            backdrop-filter: blur(10px);
+        }
+
+        .menu-toggle:hover {
+            background: var(--sidebar-hover);
+        }
+
+        /* ============================
+               WOTD CARD
+            ============================ */
+        .wotd-card {
+            background: linear-gradient(135deg, rgba(247, 151, 30, 0.08), rgba(247, 151, 30, 0.02));
+            border: 1px solid rgba(247, 151, 30, 0.15);
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .wotd-card:hover {
+            background: rgba(247, 151, 30, 0.12);
+        }
+
+        .wotd-card .wotd-label {
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .wotd-card .wotd-word {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .wotd-card .wotd-meaning {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .wotd-card .wotd-amharic {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        /* ============================
+               FLASHCARDS
+            ============================ */
+        .flashcard-container {
+            perspective: 1000px;
+            margin: 10px 0 20px;
+            min-height: 200px;
+        }
+
+        .flashcard {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px 25px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard .front,
+        .flashcard .back {
+            backface-visibility: hidden;
+            width: 100%;
+        }
+
+        .flashcard .back {
+            transform: rotateY(180deg);
+            display: none;
+        }
+
+        .flashcard.flipped .front {
+            display: none;
+        }
+
+        .flashcard.flipped .back {
+            display: block;
+        }
+
+        .flashcard .front .word {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .flashcard .front .pos {
+            font-size: 14px;
+            color: var(--accent2);
+            margin-top: 4px;
+        }
+
+        .flashcard .back .amharic {
+            font-size: 28px;
+            color: var(--text-secondary);
+        }
+
+        .flashcard .back .meaning {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .flashcard-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .flashcard-controls button {
+            padding: 8px 20px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .flashcard-controls button:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .flashcard-controls .card-count {
+            color: var(--text-muted);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* GitHub loading status */
+        .github-status {
+            font-size: 12px;
+            color: var(--text-muted);
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--filter-bg);
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .github-status.loading {
+            color: var(--accent);
+        }
+
+        .github-status.success {
+            color: #2ed573;
+        }
+
+        .github-status.error {
+            color: #e74c3c;
+        }
     </style>
 </head>
 <body>
-    <!-- ... (your existing HTML) ... -->
+
+    <!-- ===== MENU TOGGLE (Mobile) ===== -->
+    <button class="menu-toggle" id="menuToggle">☰</button>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>📖 መዝገበ ቃላት</h2>
+            <p>English → አማርኛ</p>
+            <span class="badge" id="wordCountBadge">0 ቃላት</span>
+        </div>
+
+        <ul class="sidebar-nav" id="sidebarNav">
+            <li><button class="active" data-panel="searchPanel"><span class="icon">🔍</span> ፈልግ</button></li>
+            <li><button data-panel="favoritesPanel"><span class="icon">⭐</span> ተወዳጅ</button></li>
+            <li><button data-panel="historyPanel"><span class="icon">🕐</span> ታሪክ</button></li>
+            <li><button data-panel="flashcardPanel"><span class="icon">🃏</span> ካርዶች</button></li>
+        </ul>
+
+        <!-- ===== INSTALL BUTTON IN SIDEBAR ===== -->
+        <div class="install-section">
+            <button class="install-btn" id="installAppBtn">
+                📲 መተግበሪያ ጫን
+            </button>
+            <div class="install-text" id="installStatus">ለፈጣን መዳረሻ በስልክ መነሻ ገጽ ላይ ይጫኑ</div>
+        </div>
+
+        <div class="sidebar-footer">
+            ከ GitHub በራስ-ሰር ይጫናል<br>
+            <span id="githubStatus" class="github-status loading">⏳ እየተጫነ...</span>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content" id="mainContent">
+        <!-- Header -->
+        <div class="app-header">
+            <h1>📖 እንግሊዝኛ → አማርኛ</h1>
+            <div class="header-actions">
+                <button class="header-btn" id="themeToggle" title="Toggle Theme">🌓</button>
+            </div>
+        </div>
+
+        <!-- GitHub Status -->
+        <div id="githubStatusBar" class="github-status loading">⏳ ከ GitHub እየተጫነ...</div>
+
+        <!-- Search -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="ፈልግ ቃል... Search word..." autofocus>
+        </div>
+
+        <!-- Letter Navigation -->
+        <div class="letter-nav" id="letterNav">
+            <button data-letter="a">A</button><button data-letter="b">B</button>
+            <button data-letter="c">C</button><button data-letter="d">D</button>
+            <button data-letter="e">E</button><button data-letter="f">F</button>
+            <button data-letter="g">G</button><button data-letter="h">H</button>
+            <button data-letter="i">I</button><button data-letter="j">J</button>
+            <button data-letter="k">K</button><button data-letter="l">L</button>
+            <button data-letter="m">M</button><button data-letter="n">N</button>
+            <button data-letter="o">O</button><button data-letter="p">P</button>
+            <button data-letter="q">Q</button><button data-letter="r">R</button>
+            <button data-letter="s">S</button><button data-letter="t">T</button>
+            <button data-letter="u">U</button><button data-letter="v">V</button>
+            <button data-letter="w">W</button><button data-letter="x">X</button>
+            <button data-letter="y">Y</button><button data-letter="z">Z</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters" id="filterContainer">
+            <button class="filter-btn active" data-filter="all">ሁሉም</button>
+            <button class="filter-btn" data-filter="n">ስም</button>
+            <button class="filter-btn" data-filter="v">ግስ</button>
+            <button class="filter-btn" data-filter="adj">ቅጽል</button>
+            <button class="filter-btn" data-filter="adv">ተውሳክ</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <span><span id="resultCount">0</span> ቃላት · <span id="resultStatus">ፈልግ</span></span>
+            <span id="letterLabel"></span>
+        </div>
+
+        <!-- Word of the Day -->
+        <div id="wotdContainer" style="display:none;">
+            <div class="wotd-card" id="wotdCard" onclick="searchWord(this.dataset.word)">
+                <div>
+                    <div class="wotd-label">⭐ የዛሬ ቃል · Word of the Day</div>
+                    <div class="wotd-word" id="wotdWord">-</div>
+                    <div class="wotd-amharic" id="wotdAmharic">-</div>
+                </div>
+                <div>
+                    <div class="wotd-meaning" id="wotdMeaning">-</div>
+                    <div style="font-size:12px;color:var(--text-muted);margin-top:4px;" id="wotdPos">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PANELS ===== -->
+        <div id="mainPanels">
+            <!-- Search Panel -->
+            <div class="panel active" id="searchPanel">
+                <div id="results">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <div class="text">ቃላት እየተጫኑ ነው...</div>
+                    </div>
+                </div>
+                <div class="pagination" id="pagination">
+                    <button id="prevPage">◀ ቀዳሚ</button>
+                    <span class="page-info">ገጽ <span id="currentPage">1</span> / <span id="totalPages">1</span></span>
+                    <button id="nextPage">ቀጣይ ▶</button>
+                </div>
+            </div>
+
+            <!-- Favorites Panel -->
+            <div class="panel" id="favoritesPanel">
+                <div class="panel-title">
+                    ⭐ የተወደዱ
+                    <div>
+                        <button class="export-btn" id="exportFavorites">📤 ኤክስፖርት</button>
+                        <button class="clear-btn" id="clearFavorites">ሁሉን አጥፋ</button>
+                    </div>
+                </div>
+                <div id="favoritesList"></div>
+            </div>
+
+            <!-- History Panel -->
+            <div class="panel" id="historyPanel">
+                <div class="panel-title">
+                    🕐 ታሪክ
+                    <button class="clear-btn" id="clearHistory">ሁሉን አጥፋ</button>
+                </div>
+                <div id="historyList"></div>
+            </div>
+
+            <!-- Flashcard Panel -->
+            <div class="panel" id="flashcardPanel">
+                <div class="panel-title">🃏 ካርዶች (Flashcards)</div>
+                <div class="flashcard-container">
+                    <div class="flashcard" id="flashcard" onclick="flipCard()">
+                        <div class="front">
+                            <div class="word" id="fcWord">-</div>
+                            <div class="pos" id="fcPos">-</div>
+                            <div style="font-size:13px;color:var(--text-muted);margin-top:16px;">👆 ለማየት ይጫጩ</div>
+                        </div>
+                        <div class="back">
+                            <div class="amharic" id="fcAmharic">-</div>
+                            <div class="meaning" id="fcMeaning">-</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flashcard-controls">
+                    <button onclick="prevCard()">◀ ቀዳሚ</button>
+                    <span class="card-count" id="fcCounter">0 / 0</span>
+                    <button onclick="nextCard()">ቀጣይ ▶</button>
+                    <button onclick="shuffleCards()">🔀 ቀላቅል</button>
+                    <button onclick="resetFlashcards()">🔄 ዳግም</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
 
     <script>
         // ================================================================
-        //  CONFIGURATION
+        //  CONFIGURATION - YOUR GITHUB CSV URL
         // ================================================================
 
-        // 🔥 CHANGE THIS TO YOUR GITHUB CSV URL
-        const CSV_URL = 'https://github.com/mulatakebede/dictionary-app/blob/main/wordWebDic.csv';
+        const CSV_URL = 'https://raw.githubusercontent.com/mulatakebede/dictionary-app/main/wordWebDic.csv';
 
         // ================================================================
         //  DICTIONARY ENGINE
@@ -32,7 +1161,81 @@
         let totalWords = 0;
         let dataLoaded = false;
 
-        // ... (your existing dictionary functions) ...
+        // Pagination
+        let currentPage = 1;
+        let pageSize = 20;
+        let currentResults = [];
+
+        // Flashcards
+        let flashcardWords = [];
+        let flashcardIndex = 0;
+        let isFlipped = false;
+
+        // Theme
+        let currentTheme = localStorage.getItem('dict_theme') || 'dark';
+
+        // PWA Install
+        let deferredPrompt = null;
+
+        // App State
+        let currentFilter = 'all';
+        let searchQuery = '';
+        let currentLetter = '';
+        let favorites = JSON.parse(localStorage.getItem('dict_favorites_sidebar') || '[]');
+        let history = JSON.parse(localStorage.getItem('dict_history_sidebar') || '[]');
+
+        // ================================================================
+        //  BUILD DICTIONARY
+        // ================================================================
+
+        function buildDictionary(entries) {
+            for (const key in dictionary) {
+                delete dictionary[key];
+            }
+            totalWords = 0;
+
+            for (const entry of entries) {
+                const word = entry[0].toLowerCase();
+                const pos = entry[1] || '';
+                const root = entry[2] || '';
+                const meaning = entry[3] || '';
+                const amharic = entry[4] || '';
+
+                if (!dictionary[word]) {
+                    dictionary[word] = [];
+                }
+                dictionary[word].push({
+                    pos: pos,
+                    root: root,
+                    meaning: meaning,
+                    amharic: amharic,
+                    original: entry[0]
+                });
+                totalWords++;
+            }
+
+            const wordCount = Object.keys(dictionary).length;
+            document.getElementById('wordCountBadge').textContent = `${wordCount} ቃላት`;
+            dataLoaded = true;
+
+            console.log(`✅ Dictionary built: ${wordCount} unique words, ${totalWords} entries`);
+
+            // Update GitHub status
+            const statusEl = document.getElementById('githubStatus');
+            const statusBar = document.getElementById('githubStatusBar');
+            if (statusEl) {
+                statusEl.textContent = `✅ ${wordCount} ቃላት ተጭነዋል`;
+                statusEl.className = 'github-status success';
+            }
+            if (statusBar) {
+                statusBar.textContent = `✅ ከ GitHub ${wordCount} ቃላት ተጭነዋል`;
+                statusBar.className = 'github-status success';
+            }
+
+            initWordOfTheDay();
+            initFlashcards();
+            showAllWords();
+        }
 
         // ================================================================
         //  CSV PARSER
@@ -42,15 +1245,16 @@
             const lines = text.split(/\r?\n/);
             if (lines.length === 0) return [];
 
-            // Try to find headers
+            // Check if first line has headers
             const firstLine = lines[0].toLowerCase();
+            let startLine = 0;
             let wordIdx = 0,
                 posIdx = 1,
                 rootIdx = 2,
                 meaningIdx = 3,
                 amharicIdx = 4;
 
-            // Check if first line has headers
+            // Try to find headers
             if (firstLine.includes('word') && firstLine.includes('amharic')) {
                 const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
                 wordIdx = headers.findIndex(h => h === 'word');
@@ -58,10 +1262,7 @@
                 rootIdx = headers.findIndex(h => h === 'root');
                 meaningIdx = headers.findIndex(h => h === 'meaning');
                 amharicIdx = headers.findIndex(h => h === 'amharic');
-                // Start from line 1 (skip headers)
-                var startLine = 1;
-            } else {
-                var startLine = 0;
+                startLine = 1;
             }
 
             const entries = [];
@@ -103,8 +1304,22 @@
         // ================================================================
 
         async function loadDictionaryFromGitHub() {
+            const statusEl = document.getElementById('githubStatus');
+            const statusBar = document.getElementById('githubStatusBar');
+
             try {
                 console.log('📥 Loading dictionary from GitHub...');
+                console.log(`📥 URL: ${CSV_URL}`);
+
+                if (statusEl) {
+                    statusEl.textContent = '⏳ እየተጫነ...';
+                    statusEl.className = 'github-status loading';
+                }
+                if (statusBar) {
+                    statusBar.textContent = '⏳ ከ GitHub እየተጫነ...';
+                    statusBar.className = 'github-status loading';
+                }
+
                 const response = await fetch(CSV_URL);
 
                 if (!response.ok) {
@@ -124,14 +1339,22 @@
 
             } catch (error) {
                 console.error('❌ Failed to load from GitHub:', error);
-                showToast('⚠️ ከGitHub መጫን አልተቻለም, ከአካባቢ እየተጫነ...');
+                if (statusEl) {
+                    statusEl.textContent = '❌ ከGitHub አልተገኘም';
+                    statusEl.className = 'github-status error';
+                }
+                if (statusBar) {
+                    statusBar.textContent = '❌ ከGitHub መጫን አልተቻለም';
+                    statusBar.className = 'github-status error';
+                }
+                showToast('⚠️ ከGitHub መጫን አልተቻለም');
                 // Fallback to local data
                 loadLocalData();
             }
         }
 
         // ================================================================
-        //  LOAD FROM LOCAL (dictionary-data.js)
+        //  LOAD FROM LOCAL (dictionary-data.js fallback)
         // ================================================================
 
         function loadLocalData() {
@@ -139,6 +1362,11 @@
                 console.log(`📚 Using local data: ${DICTIONARY_DATA.length} words`);
                 buildDictionary(DICTIONARY_DATA);
                 showToast(`📚 ${DICTIONARY_DATA.length} ቃላት ተጭነዋል (ከአካባቢ)`);
+                const statusEl = document.getElementById('githubStatus');
+                if (statusEl) {
+                    statusEl.textContent = `📚 ${DICTIONARY_DATA.length} ቃላት (ከአካባቢ)`;
+                    statusEl.className = 'github-status';
+                }
             } else {
                 console.warn('⚠️ No local data found');
                 document.getElementById('results').innerHTML = `
@@ -154,88 +1382,749 @@
         }
 
         // ================================================================
-        //  BUILD DICTIONARY
+        //  PWA INSTALL (Sidebar)
         // ================================================================
 
-        function buildDictionary(entries) {
-            for (const key in dictionary) {
-                delete dictionary[key];
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            deferredPrompt = e;
+            const btn = document.getElementById('installAppBtn');
+            if (btn) {
+                btn.style.display = 'flex';
+                btn.textContent = '📲 መተግበሪያ ጫን';
+                document.getElementById('installStatus').textContent = 'ለፈጣን መዳረሻ በስልክ መነሻ ገጽ ላይ ይጫኑ';
             }
-            totalWords = 0;
+        });
 
-            for (const entry of entries) {
-                const word = entry[0].toLowerCase();
-                const pos = entry[1] || '';
-                const root = entry[2] || '';
-                const meaning = entry[3] || '';
-                const amharic = entry[4] || '';
-
-                if (!dictionary[word]) {
-                    dictionary[word] = [];
-                }
-                dictionary[word].push({
-                    pos: pos,
-                    root: root,
-                    meaning: meaning,
-                    amharic: amharic,
-                    original: entry[0]
+        document.getElementById('installAppBtn').addEventListener('click', function() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(function(choiceResult) {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('✅ App installed!');
+                        this.classList.add('installed');
+                        this.textContent = '✅ ተጭኗል!';
+                        document.getElementById('installStatus').textContent = 'በመነሻ ገጽ ላይ ተጭኗል';
+                        setTimeout(() => {
+                            this.classList.remove('installed');
+                            this.textContent = '📲 መተግበሪያ ጫን';
+                            document.getElementById('installStatus').textContent =
+                            'ለፈጣን መዳረሻ በስልክ መነሻ ገጽ ላይ ይጫኑ';
+                        }, 3000);
+                    } else {
+                        console.log('⏭ Installation cancelled');
+                    }
+                    deferredPrompt = null;
                 });
-                totalWords++;
+            } else {
+                // Fallback instructions
+                const isChrome = /Chrome/.test(navigator.userAgent) && /Android/.test(navigator.userAgent);
+                const isSafari = /Safari/.test(navigator.userAgent) && /iPhone|iPad/.test(navigator.userAgent);
+
+                let msg = '';
+                if (isChrome) {
+                    msg = '📱 በላይኛው ቀኝ ሶስት ነጥብ (⋮) ይጫጩ → "Add to Home Screen" ይምረጡ';
+                } else if (isSafari) {
+                    msg = '📱 ከታች መሀል ያለውን "Share" ይጫጩ → "Add to Home Screen" ይምረጡ';
+                } else {
+                    msg = '📱 በአሳሽ ሜኑ ውስጥ "Add to Home Screen" ወይም "Install App" ይፈልጉ';
+                }
+                alert(msg);
             }
+        });
 
-            const wordCount = Object.keys(dictionary).length;
-            document.getElementById('wordCountBadge').textContent = `${wordCount} ቃላት`;
-            dataLoaded = true;
+        // Hide button if already installed
+        window.addEventListener('appinstalled', function() {
+            const btn = document.getElementById('installAppBtn');
+            if (btn) {
+                btn.classList.add('installed');
+                btn.textContent = '✅ ተጭኗል!';
+                document.getElementById('installStatus').textContent = 'በመነሻ ገጽ ላይ ተጭኗል';
+            }
+        });
 
-            console.log(`✅ Dictionary built: ${wordCount} unique words, ${totalWords} entries`);
-
-            // Init features and show words
-            if (typeof initWordOfTheDay === 'function') initWordOfTheDay();
-            if (typeof initFlashcards === 'function') initFlashcards();
-            if (typeof showAllWords === 'function') showAllWords();
+        if (window.navigator && window.navigator.standalone) {
+            const btn = document.getElementById('installAppBtn');
+            if (btn) {
+                btn.classList.add('installed');
+                btn.textContent = '✅ ተጭኗል!';
+                document.getElementById('installStatus').textContent = 'በመነሻ ገጽ ላይ ተጭኗል';
+            }
         }
 
         // ================================================================
-        //  TOAST (Simple version)
+        //  SIDEBAR NAVIGATION
         // ================================================================
+
+        document.querySelectorAll('.sidebar-nav button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const panelId = this.dataset.panel;
+                document.querySelectorAll('.sidebar-nav button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                document.getElementById(panelId).classList.add('active');
+
+                if (panelId === 'favoritesPanel') renderFavorites();
+                if (panelId === 'historyPanel') renderHistory();
+                if (panelId === 'flashcardPanel') initFlashcards();
+
+                // Close sidebar on mobile
+                if (window.innerWidth <= 768) {
+                    document.getElementById('sidebar').classList.remove('open');
+                }
+            });
+        });
+
+        // ================================================================
+        //  MENU TOGGLE (Mobile)
+        // ================================================================
+
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('open');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('sidebar');
+                const toggle = document.getElementById('menuToggle');
+                if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
+            }
+        });
+
+        // ================================================================
+        //  THEME
+        // ================================================================
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('dict_theme', theme);
+            currentTheme = theme;
+            document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+
+        applyTheme(currentTheme);
+
+        // ================================================================
+        //  WORD OF THE DAY
+        // ================================================================
+
+        function initWordOfTheDay() {
+            const words = Object.keys(dictionary);
+            if (words.length === 0) return;
+
+            const today = new Date().toDateString();
+            const storedDate = localStorage.getItem('wotd_date');
+            let word;
+
+            if (storedDate === today) {
+                word = localStorage.getItem('wotd_word');
+            } else {
+                const seed = today.split(' ').join('');
+                let hash = 0;
+                for (let i = 0; i < seed.length; i++) {
+                    hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+                    hash |= 0;
+                }
+                const index = Math.abs(hash) % words.length;
+                word = words[index];
+                localStorage.setItem('wotd_date', today);
+                localStorage.setItem('wotd_word', word);
+            }
+
+            const entry = dictionary[word] ? dictionary[word][0] : null;
+            if (entry) {
+                document.getElementById('wotdWord').textContent = entry.original || word;
+                document.getElementById('wotdAmharic').textContent = entry.amharic || '';
+                document.getElementById('wotdMeaning').textContent = entry.meaning || '';
+                document.getElementById('wotdPos').textContent = entry.pos || '';
+                document.getElementById('wotdCard').dataset.word = word;
+                document.getElementById('wotdContainer').style.display = 'block';
+            }
+        }
+
+        // ================================================================
+        //  FLASHCARDS
+        // ================================================================
+
+        function initFlashcards() {
+            const words = Object.keys(dictionary);
+            if (flashcardWords.length === 0) {
+                flashcardWords = words.slice(0, 100);
+            }
+            flashcardIndex = 0;
+            updateFlashcard();
+        }
+
+        function updateFlashcard() {
+            if (flashcardWords.length === 0 || flashcardIndex >= flashcardWords.length) {
+                flashcardIndex = 0;
+            }
+            const word = flashcardWords[flashcardIndex];
+            const entry = dictionary[word] ? dictionary[word][0] : null;
+            if (entry) {
+                document.getElementById('fcWord').textContent = entry.original || word;
+                document.getElementById('fcPos').textContent = entry.pos || '';
+                document.getElementById('fcAmharic').textContent = entry.amharic || '';
+                document.getElementById('fcMeaning').textContent = entry.meaning || '';
+                document.getElementById('fcCounter').textContent = `${flashcardIndex + 1} / ${flashcardWords.length}`;
+            }
+            document.getElementById('flashcard').classList.remove('flipped');
+            isFlipped = false;
+        }
+
+        function flipCard() {
+            isFlipped = !isFlipped;
+            document.getElementById('flashcard').classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            if (flashcardWords.length === 0) return;
+            flashcardIndex = (flashcardIndex + 1) % flashcardWords.length;
+            updateFlashcard();
+        }
+
+        function prevCard() {
+            if (flashcardWords.length === 0) return;
+            flashcardIndex = (flashcardIndex - 1 + flashcardWords.length) % flashcardWords.length;
+            updateFlashcard();
+        }
+
+        function shuffleCards() {
+            for (let i = flashcardWords.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [flashcardWords[i], flashcardWords[j]] = [flashcardWords[j], flashcardWords[i]];
+            }
+            flashcardIndex = 0;
+            updateFlashcard();
+            showToast('🔀 ቃላት ተቀላቅለዋል');
+        }
+
+        function resetFlashcards() {
+            const words = Object.keys(dictionary);
+            flashcardWords = words.slice(0, 100);
+            flashcardIndex = 0;
+            updateFlashcard();
+            showToast('🔄 ቃላት ወደ መጀመሪያ ተመልሰዋል');
+        }
+
+        // ================================================================
+        //  LETTER NAVIGATION
+        // ================================================================
+
+        document.querySelectorAll('.letter-nav button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const letter = this.dataset.letter;
+                document.querySelectorAll('.letter-nav button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                if (currentLetter === letter) {
+                    currentLetter = '';
+                    this.classList.remove('active');
+                    document.getElementById('letterLabel').textContent = '';
+                    showAllWords();
+                    return;
+                }
+
+                currentLetter = letter;
+                document.getElementById('letterLabel').textContent = `📌 ፊደል: ${letter.toUpperCase()}`;
+
+                const words = Object.keys(dictionary).filter(w => w.startsWith(letter));
+                const results = [];
+                for (const word of words) {
+                    const entries = dictionary[word];
+                    for (const entry of entries) {
+                        if (currentFilter === 'all' || entry.pos === currentFilter) {
+                            results.push({ word, ...entry });
+                        }
+                    }
+                }
+
+                currentResults = results;
+                currentPage = 1;
+                renderPage(results, 1);
+                updatePagination(results.length, 1);
+                document.getElementById('resultCount').textContent = results.length;
+                document.getElementById('resultStatus').textContent = `📌 ${letter.toUpperCase()} - ${results.length} ቃላት`;
+            });
+        });
+
+        // ================================================================
+        //  FILTERS
+        // ================================================================
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                currentPage = 1;
+                if (searchQuery) {
+                    performSearch(searchQuery);
+                } else if (currentLetter) {
+                    const letter = currentLetter;
+                    const words = Object.keys(dictionary).filter(w => w.startsWith(letter));
+                    const results = [];
+                    for (const word of words) {
+                        const entries = dictionary[word];
+                        for (const entry of entries) {
+                            if (currentFilter === 'all' || entry.pos === currentFilter) {
+                                results.push({ word, ...entry });
+                            }
+                        }
+                    }
+                    currentResults = results;
+                    currentPage = 1;
+                    renderPage(results, 1);
+                    updatePagination(results.length, 1);
+                    document.getElementById('resultCount').textContent = results.length;
+                    document.getElementById('resultStatus').textContent =
+                    `📌 ${letter.toUpperCase()} - ${results.length} ቃላት`;
+                } else {
+                    showAllWords();
+                }
+            });
+        });
+
+        // ================================================================
+        //  PAGINATION
+        // ================================================================
+
+        function renderPage(results, page) {
+            const start = (page - 1) * pageSize;
+            const end = start + pageSize;
+            const pageItems = results.slice(start, end);
+
+            if (pageItems.length === 0 && page > 1) {
+                currentPage = page - 1;
+                renderPage(results, currentPage);
+                return;
+            }
+
+            displayResults(pageItems, results.length, page);
+        }
+
+        function updatePagination(total, page) {
+            const totalPages = Math.ceil(total / pageSize);
+            document.getElementById('currentPage').textContent = page;
+            document.getElementById('totalPages').textContent = totalPages || 1;
+            document.getElementById('prevPage').disabled = page <= 1;
+            document.getElementById('nextPage').disabled = page >= totalPages;
+        }
+
+        document.getElementById('prevPage').addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentResults, currentPage);
+                document.getElementById('searchPanel').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', function() {
+            const totalPages = Math.ceil(currentResults.length / pageSize);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage(currentResults, currentPage);
+                document.getElementById('searchPanel').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        // ================================================================
+        //  SEARCH
+        // ================================================================
+
+        function performSearch(query) {
+            searchQuery = query.trim().toLowerCase();
+            const results = [];
+
+            if (searchQuery === '' || !dataLoaded) {
+                showAllWords();
+                return;
+            }
+
+            const words = Object.keys(dictionary);
+            for (const word of words) {
+                const entries = dictionary[word];
+                for (const entry of entries) {
+                    const matchWord = word.includes(searchQuery) || searchQuery.includes(word);
+                    const matchMeaning = entry.meaning && entry.meaning.toLowerCase().includes(searchQuery);
+                    const matchAmharic = entry.amharic && entry.amharic.includes(searchQuery);
+
+                    if (matchWord || matchMeaning || matchAmharic) {
+                        if (currentFilter === 'all' || entry.pos === currentFilter) {
+                            results.push({ word, ...entry });
+                        }
+                    }
+                }
+            }
+
+            if (searchQuery) {
+                document.querySelectorAll('.letter-nav button').forEach(b => b.classList.remove('active'));
+                currentLetter = '';
+                document.getElementById('letterLabel').textContent = '';
+            }
+
+            currentResults = results;
+            currentPage = 1;
+            renderPage(results, 1);
+            updatePagination(results.length, 1);
+            document.getElementById('resultCount').textContent = results.length;
+            document.getElementById('resultStatus').textContent = `${results.length} ውጤቶች`;
+        }
+
+        function showAllWords() {
+            if (!dataLoaded || Object.keys(dictionary).length === 0) {
+                document.getElementById('results').innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <div class="text">ቃላት እየተጫኑ ነው...</div>
+                    </div>
+                `;
+                document.getElementById('resultCount').textContent = '0';
+                document.getElementById('resultStatus').textContent = 'ፈልግ';
+                document.getElementById('pagination').style.display = 'none';
+                return;
+            }
+
+            const results = [];
+            const words = Object.keys(dictionary);
+            for (const word of words) {
+                const entries = dictionary[word];
+                for (const entry of entries) {
+                    if (currentFilter === 'all' || entry.pos === currentFilter) {
+                        results.push({ word, ...entry });
+                    }
+                }
+            }
+
+            currentResults = results;
+            currentPage = 1;
+            renderPage(results, 1);
+            updatePagination(results.length, 1);
+            document.getElementById('resultCount').textContent = results.length;
+            document.getElementById('resultStatus').textContent = `ሁሉም ቃላት`;
+            document.getElementById('pagination').style.display = results.length > pageSize ? 'flex' : 'none';
+        }
+
+        function displayResults(results, total, page) {
+            const resultsEl = document.getElementById('results');
+
+            if (results.length === 0) {
+                resultsEl.innerHTML = `
+                    <div class="no-result">
+                        <div class="icon">😕</div>
+                        <div class="text">ምንም ቃላት አልተገኙም</div>
+                        <div style="color:var(--text-muted);font-size:13px;margin-top:4px;opacity:0.6;">ሌላ ቃል ይሞክሩ</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            for (const r of results) {
+                const isFav = favorites.includes(r.word);
+                const displayWord = r.original || r.word;
+
+                html += `
+                    <div class="result-card">
+                        <div class="word-row">
+                            <span class="word">${displayWord}</span>
+                            <span class="pos">${r.pos || ''}</span>
+                        </div>
+                        <div class="amharic">${r.amharic || 'ትርጉም የለም'}</div>
+                        ${r.meaning ? `<div class="meaning">${r.meaning}</div>` : ''}
+                        ${r.root ? `<div class="root">📎 ሥር: ${r.root}</div>` : ''}
+                        <div class="actions">
+                            <button class="action-btn ${isFav ? 'fav' : ''}" onclick="toggleFavorite('${r.word}')">
+                                ${isFav ? '⭐' : '☆'} ተወዳጅ
+                            </button>
+                            <button class="action-btn" onclick="copyText('${r.amharic || ''}')">📋 ቅዳ</button>
+                            <button class="action-btn" onclick="shareWord('${r.word}')">📤 አጋራ</button>
+                        </div>
+                    </div>
+                `;
+            }
+            resultsEl.innerHTML = html;
+            document.getElementById('pagination').style.display = total > pageSize ? 'flex' : 'none';
+        }
+
+        // ================================================================
+        //  SEARCH INPUT
+        // ================================================================
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const query = this.value.trim();
+            if (query.length > 0) {
+                performSearch(query);
+            } else {
+                showAllWords();
+            }
+        });
+
+        document.getElementById('searchInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query && dataLoaded) {
+                    addToHistory(query);
+                    performSearch(query);
+                }
+            }
+        });
+
+        // ================================================================
+        //  FAVORITES
+        // ================================================================
+
+        function toggleFavorite(word) {
+            const index = favorites.indexOf(word);
+            if (index > -1) {
+                favorites.splice(index, 1);
+                showToast('⭐ ከተወዳጆች ተወግዷል');
+            } else {
+                favorites.push(word);
+                showToast('⭐ ወደ ተወዳጅ ተጨምሯል');
+            }
+            localStorage.setItem('dict_favorites_sidebar', JSON.stringify(favorites));
+            if (searchQuery) performSearch(searchQuery);
+            renderFavorites();
+        }
+
+        function renderFavorites() {
+            const list = document.getElementById('favoritesList');
+            if (favorites.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-panel">
+                        <div class="icon">⭐</div>
+                        <div class="text">ምንም የተወደዱ ቃላት የሉም</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            for (const word of favorites) {
+                const entries = dictionary[word];
+                if (entries) {
+                    for (const e of entries) {
+                        const displayWord = e.original || word;
+                        html += `
+                            <div class="list-item" onclick="searchWord('${word}')">
+                                <span class="word">${displayWord}</span>
+                                <span class="meaning">${e.amharic || ''}</span>
+                                <button class="remove-btn" onclick="event.stopPropagation(); toggleFavorite('${word}')">✕</button>
+                            </div>
+                        `;
+                        break;
+                    }
+                }
+            }
+            list.innerHTML = html || '<div class="empty-panel"><div class="text">ቃላት የሉም</div></div>';
+        }
+
+        document.getElementById('clearFavorites').addEventListener('click', function() {
+            if (confirm('ሁሉንም የተወደዱ ቃላት ማጥፋት ይፈልጋሉ?')) {
+                favorites = [];
+                localStorage.setItem('dict_favorites_sidebar', JSON.stringify(favorites));
+                renderFavorites();
+                showToast('ሁሉም ተወዳጅ ቃላት ተወግደዋል');
+            }
+        });
+
+        document.getElementById('exportFavorites').addEventListener('click', function() {
+            if (favorites.length === 0) {
+                showToast('⚠️ ምንም የተወደዱ ቃላት የሉም');
+                return;
+            }
+
+            let csv = 'word,pos,root,meaning,amharic\n';
+            for (const word of favorites) {
+                const entries = dictionary[word];
+                if (entries) {
+                    for (const e of entries) {
+                        csv +=
+                            `"${e.original || word}","${e.pos || ''}","${e.root || ''}","${e.meaning || ''}","${e.amharic || ''}"\n`;
+                        break;
+                    }
+                }
+            }
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `favorites_${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+            showToast(`📤 ${favorites.length} ቃላት ተኤክስፖርት ተደርገዋል`);
+        });
+
+        // ================================================================
+        //  HISTORY
+        // ================================================================
+
+        function addToHistory(word) {
+            if (!history.includes(word)) {
+                history.unshift(word);
+                if (history.length > 50) history.pop();
+                localStorage.setItem('dict_history_sidebar', JSON.stringify(history));
+            }
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('historyList');
+            if (history.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-panel">
+                        <div class="icon">🕐</div>
+                        <div class="text">ምንም የፍለጋ ታሪክ የለም</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            for (const word of history) {
+                const entries = dictionary[word];
+                if (entries) {
+                    for (const e of entries) {
+                        const displayWord = e.original || word;
+                        html += `
+                            <div class="list-item" onclick="searchWord('${word}')">
+                                <span class="word">${displayWord}</span>
+                                <span class="meaning">${e.amharic || ''}</span>
+                                <button class="remove-btn" onclick="event.stopPropagation(); removeHistory('${word}')">✕</button>
+                            </div>
+                        `;
+                        break;
+                    }
+                }
+            }
+            list.innerHTML = html || '<div class="empty-panel"><div class="text">ቃላት የሉም</div></div>';
+        }
+
+        function removeHistory(word) {
+            const index = history.indexOf(word);
+            if (index > -1) {
+                history.splice(index, 1);
+                localStorage.setItem('dict_history_sidebar', JSON.stringify(history));
+                renderHistory();
+            }
+        }
+
+        document.getElementById('clearHistory').addEventListener('click', function() {
+            if (confirm('ሁሉንም የፍለጋ ታሪክ ማጥፋት ይፈልጋሉ?')) {
+                history = [];
+                localStorage.setItem('dict_history_sidebar', JSON.stringify(history));
+                renderHistory();
+                showToast('ታሪክ ተጠርጓል');
+            }
+        });
+
+        // ================================================================
+        //  UTILITY FUNCTIONS
+        // ================================================================
+
+        function searchWord(word) {
+            document.getElementById('searchInput').value = word;
+            if (dataLoaded) {
+                addToHistory(word);
+                performSearch(word);
+            }
+            document.querySelectorAll('.sidebar-nav button').forEach(b => b.classList.remove('active'));
+            document.querySelector('[data-panel="searchPanel"]').classList.add('active');
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('searchPanel').classList.add('active');
+        }
+
+        function copyText(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('📋 ተቀድቷል!');
+                }).catch(() => {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('📋 ተቀድቷል!');
+            } catch (e) {
+                showToast('⚠️ መቅዳት አልተቻለም');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function shareWord(word) {
+            const entries = dictionary[word];
+            if (!entries) return;
+            const entry = entries[0];
+            const displayWord = entry.original || word;
+            const text =
+                `${displayWord} (${entry.pos || ''}): ${entry.amharic || ''}${entry.meaning ? ' - ' + entry.meaning : ''}`;
+            if (navigator.share) {
+                navigator.share({ title: displayWord, text: text }).catch(() => {});
+            } else {
+                copyText(text);
+                showToast('📋 ለመጋራት ተቀድቷል');
+            }
+        }
 
         function showToast(message) {
             const toast = document.getElementById('toast');
-            if (!toast) return;
             toast.textContent = message;
             toast.classList.add('show');
             clearTimeout(window.toastTimeout);
             window.toastTimeout = setTimeout(() => {
                 toast.classList.remove('show');
-            }, 3000);
+            }, 2000);
         }
 
         // ================================================================
-        //  START: Try GitHub first, fallback to local
+        //  FALLBACK DATA (3 sample entries if GitHub fails)
         // ================================================================
 
-        // Wait for DOM to load then start
-        document.addEventListener('DOMContentLoaded', function() {
-            // Try loading from GitHub
-            loadDictionaryFromGitHub();
-        });
-
-        console.log('📖 Dictionary App ready!');
-        console.log(`📥 Will try to load from: ${CSV_URL}`);
-        console.log('📚 Fallback: dictionary-data.js');
-    </script>
-
-    <!-- ============================================================ -->
-    <!-- FALLBACK DATA (3 Sample Entries)                             -->
-    <!-- ============================================================ -->
-    <script>
-        // This is the fallback data if GitHub fails
         const DICTIONARY_DATA = [
             ["abase", "v", "", "To lower in position, estimation, or the like; degrade", "ዝቅ ማድረግ፣ ማዋረድ"],
             ["abash", "v", "", "to make embarrassed or ashamed", "ማሳፈር፣ ማፍረር"],
             ["abbreviate", "v", "", "To shorten by omitting parts", "ማሳጠር"]
         ];
-        console.log(`📚 Fallback data loaded: ${DICTIONARY_DATA.length} sample entries`);
+
+        // ================================================================
+        //  START: Try GitHub first, fallback to local
+        // ================================================================
+
+        console.log('📖 Dictionary App starting...');
+        console.log(`📥 Loading from: ${CSV_URL}`);
+        console.log(`📚 Fallback: ${DICTIONARY_DATA.length} sample entries`);
+
+        // Try loading from GitHub
+        loadDictionaryFromGitHub();
+
+        // Initialize UI after a moment
+        setTimeout(() => {
+            renderFavorites();
+            renderHistory();
+            document.getElementById('searchInput').focus();
+        }, 500);
+
+        console.log('✅ Dictionary App ready!');
+        console.log(`📚 ${Object.keys(dictionary).length} words available`);
+        console.log('✅ Sidebar with Install button ready!');
+        console.log('✅ Auto-loads from GitHub on every refresh!');
     </script>
 
 </body>
