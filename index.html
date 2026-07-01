@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#f7971e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	
+	
+	<title>English - Amharic Dictionary</title>
+    <style>
+        /* ============================
+               THEME VARIABLES
+            ============================ */
+        :root {
+            --bg-primary: #0f0c29;
+            --bg-secondary: #1a1a3e;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-input: rgba(255, 255, 255, 0.05);
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #666666;
+            --border-color: rgba(255, 255, 255, 0.06);
+            --accent: #f7971e;
+            --accent2: #4fc3f7;
+            --shadow: rgba(0, 0, 0, 0.7);
+            --nav-bg: rgba(12, 10, 35, 0.97);
+            --toast-bg: rgba(0, 0, 0, 0.85);
+            --filter-bg: rgba(255, 255, 255, 0.03);
+            --scrollbar: rgba(255, 255, 255, 0.08);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f0f0f5;
+            --bg-secondary: #e8e8f0;
+            --bg-card: rgba(0, 0, 0, 0.04);
+            --bg-input: rgba(0, 0, 0, 0.05);
+            --text-primary: #1a1a2e;
+            --text-secondary: #333333;
+            --text-muted: #888888;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --shadow: rgba(0, 0, 0, 0.15);
+            --nav-bg: rgba(240, 240, 245, 0.97);
+            --toast-bg: rgba(0, 0, 0, 0.85);
+            --filter-bg: rgba(0, 0, 0, 0.03);
+            --scrollbar: rgba(0, 0, 0, 0.1);
+        }
+
+        /* ============================
+               BASE STYLES
+            ============================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 680px;
+            width: 100%;
+            padding-bottom: 80px;
+        }
+
+        /* ============================
+               HEADER
+            ============================ */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0 5px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .header-left h1 {
+            font-size: 24px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-left .subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: -2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .header-left .subtitle .badge {
+            background: var(--filter-bg);
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .header-right {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            padding: 8px 14px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-muted);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .header-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .header-btn.active {
+            background: rgba(247, 151, 30, 0.15);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ============================
+               SEARCH
+            ============================ */
+        .search-box {
+            display: flex;
+            gap: 8px;
+            margin: 10px 0 12px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 14px 18px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* ============================
+               LETTER NAVIGATION (A-Z)
+            ============================ */
+        .letter-nav {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+
+        .letter-nav button {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .letter-nav button:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .letter-nav button.active {
+            background: rgba(247, 151, 30, 0.2);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ============================
+               FILTERS
+            ============================ */
+        .filters {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .filter-btn {
+            padding: 5px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background: var(--filter-bg);
+            color: var(--text-muted);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .filter-btn.active {
+            background: rgba(247, 151, 30, 0.15);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ============================
+               STATS
+            ============================ */
+        .stats {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .stats span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ============================
+               WORD OF THE DAY
+            ============================ */
+        .wotd-card {
+            background: linear-gradient(135deg, rgba(247, 151, 30, 0.08), rgba(247, 151, 30, 0.02));
+            border: 1px solid rgba(247, 151, 30, 0.15);
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .wotd-card:hover {
+            background: rgba(247, 151, 30, 0.12);
+        }
+
+        .wotd-card .wotd-label {
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .wotd-card .wotd-word {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .wotd-card .wotd-meaning {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .wotd-card .wotd-amharic {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        /* ============================
+               RESULTS
+            ============================ */
+        .result-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-card .word-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .result-card .word {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .result-card .pos {
+            font-size: 12px;
+            color: var(--accent2);
+            background: rgba(79, 195, 247, 0.1);
+            padding: 2px 12px;
+            border-radius: 20px;
+        }
+
+        .result-card .amharic {
+            font-size: 19px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .result-card .meaning {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .result-card .root {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            opacity: 0.6;
+        }
+
+        .result-card .actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .action-btn.fav {
+            color: var(--accent);
+            border-color: rgba(247, 151, 30, 0.2);
+        }
+
+        /* ============================
+               PAGINATION
+            ============================ */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 0 20px;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            padding: 8px 18px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: rgba(247, 151, 30, 0.12);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .pagination .page-info {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .pagination .page-info span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ============================
+               FLASHCARDS
+            ============================ */
+        .flashcard-container {
+            perspective: 1000px;
+            margin: 10px 0 20px;
+            min-height: 200px;
+        }
+
+        .flashcard {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px 25px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard .front,
+        .flashcard .back {
+            backface-visibility: hidden;
+            width: 100%;
+        }
+
+        .flashcard .back {
+            transform: rotateY(180deg);
+            display: none;
+        }
+
+        .flashcard.flipped .front {
+            display: none;
+        }
+
+        .flashcard.flipped .back {
+            display: block;
+        }
+
+        .flashcard .front .word {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .flashcard .front .pos {
+            font-size: 14px;
+            color: var(--accent2);
+            margin-top: 4px;
+        }
+
+        .flashcard .back .amharic {
+            font-size: 28px;
+            color: var(--text-secondary);
+        }
+
+        .flashcard .back .meaning {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .flashcard-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .flashcard-controls button {
+            padding: 8px 20px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .flashcard-controls button:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .flashcard-controls .card-count {
+            color: var(--text-muted);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* ============================
+               PANELS
+            ============================ */
+        .panel {
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent);
+            padding: 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .panel-title .clear-btn {
+            font-size: 13px;
+            color: #e74c3c;
+            cursor: pointer;
+            opacity: 0.5;
+            background: none;
+            border: none;
+        }
+
+        .panel-title .clear-btn:hover {
+            opacity: 1;
+        }
+
+        .panel-title .export-btn {
+            font-size: 13px;
+            color: var(--accent);
+            cursor: pointer;
+            opacity: 0.7;
+            background: none;
+            border: none;
+        }
+
+        .panel-title .export-btn:hover {
+            opacity: 1;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: var(--bg-card);
+            border-radius: 10px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        .list-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .list-item .word {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .list-item .meaning {
+            font-size: 13px;
+            color: var(--text-muted);
+            max-width: 45%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .list-item .remove-btn {
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px 8px;
+            background: none;
+            border: none;
+        }
+
+        .list-item .remove-btn:hover {
+            color: #e74c3c;
+        }
+
+        .empty-panel {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-panel .icon {
+            font-size: 32px;
+        }
+
+        .empty-panel .text {
+            font-size: 15px;
+            margin-top: 6px;
+        }
+
+        /* ============================
+               CSV UPLOAD
+            ============================ */
+        .csv-upload-area {
+            background: var(--bg-card);
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .csv-upload-area .icon {
+            font-size: 36px;
+        }
+
+        .csv-upload-area .text {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .csv-upload-area input[type="file"] {
+            display: none;
+        }
+
+        .csv-upload-area .upload-btn {
+            padding: 10px 28px;
+            border-radius: 50px;
+            background: rgba(247, 151, 30, 0.12);
+            border: 1px solid rgba(247, 151, 30, 0.2);
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 12px;
+            transition: all 0.2s;
+        }
+
+        .csv-upload-area .upload-btn:hover {
+            background: rgba(247, 151, 30, 0.18);
+        }
+
+        .upload-status {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #2ed573;
+        }
+
+        .upload-status.error {
+            color: #e74c3c;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ============================
+               BOTTOM NAV
+            ============================ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--nav-bg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 6px 0 10px;
+            z-index: 2000;
+            transition: background 0.3s;
+        }
+
+        .bottom-nav .nav-item {
+            text-align: center;
+            padding: 4px 12px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+            transition: color 0.2s;
+            min-width: 50px;
+        }
+
+        .bottom-nav .nav-item .icon {
+            font-size: 20px;
+        }
+
+        .bottom-nav .nav-item.active {
+            color: var(--accent);
+        }
+
+        .bottom-nav .nav-item:hover {
+            color: var(--text-primary);
+        }
+
+        /* ============================
+               TOAST
+            ============================ */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--toast-bg);
+            padding: 10px 22px;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 14px;
+            display: none;
+            z-index: 3000;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            white-space: nowrap;
+            max-width: 90%;
+        }
+
+        .toast.show {
+            display: block;
+            animation: toastIn 0.25s ease;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* ============================
+               SCROLLBAR
+            ============================ */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar);
+            border-radius: 10px;
+        }
+
+        /* ============================
+               RESPONSIVE
+            ============================ */
+        @media (max-width: 480px) {
+            .header-left h1 {
+                font-size: 20px;
+            }
+            .header-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+            .result-card .word {
+                font-size: 19px;
+            }
+            .result-card .amharic {
+                font-size: 17px;
+            }
+            .flashcard .front .word {
+                font-size: 26px;
+            }
+            .flashcard .back .amharic {
+                font-size: 24px;
+            }
+            .letter-nav button {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+            }
+            .bottom-nav .nav-item {
+                font-size: 9px;
+                min-width: 40px;
+                padding: 4px 6px;
+            }
+            .bottom-nav .nav-item .icon {
+                font-size: 17px;
+            }
+            .wotd-card .wotd-word {
+                font-size: 18px;
+            }
+            .wotd-card .wotd-amharic {
+                font-size: 14px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 20px 20px 100px;
+            }
+            .result-card {
+                padding: 22px 24px;
+            }
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .loading .spinner {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading .text {
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .no-result {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+
+        .no-result .icon {
+            font-size: 40px;
+        }
+
+        .no-result .text {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+
+
+<!-- Add this to your index.html before </head> -->
+<script>
+    // Generate simple icons if missing
+    function generateIcon(size) {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, size, size);
+        gradient.addColorStop(0, '#f7971e');
+        gradient.addColorStop(1, '#ffd200');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.roundRect(0, 0, size, size, size * 0.2);
+        ctx.fill();
+        ctx.fillStyle = '#0f0c29';
+        ctx.font = `${size * 0.4}px Arial`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('📖', size / 2, size / 2 + size * 0.05);
+        return canvas.toDataURL();
+    }
+    // Use this to generate and download icons if needed
+</script>
+
+</head>
+<body>
+
+    <div class="container" id="app">
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <div class="header-left">
+                <h1>📖 English → አማርኛ</h1>
+                <div class="subtitle">
+                    መዝገበ ቃላት · ዲክሽነሪ
+                    <span class="badge" id="wordCountBadge">0 ቃላት</span>
+                    <span class="badge" id="wotdBadge">⭐ የዛሬ ቃል</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="header-btn" id="themeToggle" title="Toggle Theme">🌓</button>
+                <button class="header-btn" id="wotdToggle" title="Word of the Day">⭐</button>
+                <button class="header-btn" id="flashcardToggle" title="Flashcards">🃏</button>
+            </div>
+        </div>
+
+        <!-- ===== WORD OF THE DAY ===== -->
+        <div id="wotdContainer" style="display:none;">
+            <div class="wotd-card" id="wotdCard" onclick="searchWord(this.dataset.word)">
+                <div>
+                    <div class="wotd-label">⭐ የዛሬ ቃል · Word of the Day</div>
+                    <div class="wotd-word" id="wotdWord">-</div>
+                    <div class="wotd-amharic" id="wotdAmharic">-</div>
+                </div>
+                <div>
+                    <div class="wotd-meaning" id="wotdMeaning">-</div>
+                    <div style="font-size:12px;color:var(--text-muted);margin-top:4px;" id="wotdPos">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SEARCH ===== -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="ፈልግ ቃል... Search word..." autofocus>
+        </div>
+
+        <!-- ===== LETTER NAVIGATION (A-Z) ===== -->
+        <div class="letter-nav" id="letterNav">
+            <button data-letter="a">A</button>
+            <button data-letter="b">B</button>
+            <button data-letter="c">C</button>
+            <button data-letter="d">D</button>
+            <button data-letter="e">E</button>
+            <button data-letter="f">F</button>
+            <button data-letter="g">G</button>
+            <button data-letter="h">H</button>
+            <button data-letter="i">I</button>
+            <button data-letter="j">J</button>
+            <button data-letter="k">K</button>
+            <button data-letter="l">L</button>
+            <button data-letter="m">M</button>
+            <button data-letter="n">N</button>
+            <button data-letter="o">O</button>
+            <button data-letter="p">P</button>
+            <button data-letter="q">Q</button>
+            <button data-letter="r">R</button>
+            <button data-letter="s">S</button>
+            <button data-letter="t">T</button>
+            <button data-letter="u">U</button>
+            <button data-letter="v">V</button>
+            <button data-letter="w">W</button>
+            <button data-letter="x">X</button>
+            <button data-letter="y">Y</button>
+            <button data-letter="z">Z</button>
+        </div>
+
+        <!-- ===== FILTERS ===== -->
+        <div class="filters" id="filterContainer">
+            <button class="filter-btn active" data-filter="all">ሁሉም</button>
+            <button class="filter-btn" data-filter="n">ስም</button>
+            <button class="filter-btn" data-filter="v">ግስ</button>
+            <button class="filter-btn" data-filter="adj">ቅጽል</button>
+            <button class="filter-btn" data-filter="adv">ተውሳክ</button>
+        </div>
+
+        <!-- ===== STATS ===== -->
+        <div class="stats">
+            <span><span id="resultCount">0</span> ቃላት · <span id="resultStatus">ፈልግ</span></span>
+            <span id="letterLabel"></span>
+        </div>
+
+        <!-- ===== FLASHCARD SECTION ===== -->
+        <div id="flashcardContainer" style="display:none;">
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard" onclick="flipCard()">
+                    <div class="front">
+                        <div class="word" id="fcWord">-</div>
+                        <div class="pos" id="fcPos">-</div>
+                        <div style="font-size:13px;color:var(--text-muted);margin-top:16px;">👆 ለማየት ይጫጩ</div>
+                    </div>
+                    <div class="back">
+                        <div class="amharic" id="fcAmharic">-</div>
+                        <div class="meaning" id="fcMeaning">-</div>
+                    </div>
+                </div>
+            </div>
+            <div class="flashcard-controls">
+                <button onclick="prevCard()">◀ ቀዳሚ</button>
+                <span class="card-count" id="fcCounter">0 / 0</span>
+                <button onclick="nextCard()">ቀጣይ ▶</button>
+                <button onclick="shuffleCards()">🔀 ቀላቅል</button>
+                <button onclick="resetFlashcards()">🔄 ዳግም</button>
+            </div>
+        </div>
+
+        <!-- ===== CSV UPLOAD ===== -->
+        <div class="csv-upload-area" id="csvUploadArea">
+            <div class="icon">📂</div>
+            <div class="text">የእርስዎን CSV ፋይል ያስገቡ</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">Upload your CSV file with dictionary data</div>
+            <label class="upload-btn" for="csvFileInput">📤 ፋይል ምረጥ</label>
+            <input type="file" id="csvFileInput" accept=".csv">
+            <div class="upload-status" id="uploadStatus"></div>
+        </div>
+
+        <!-- ===== CONTENT PANELS ===== -->
+        <div id="mainContent">
+            <!-- Search Panel -->
+            <div class="panel active" id="searchPanel">
+                <div id="results">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <div class="text">ቃላት እየተጫኑ ነው...</div>
+                    </div>
+                </div>
+                <div class="pagination" id="pagination">
+                    <button id="prevPage">◀ ቀዳሚ</button>
+                    <span class="page-info">ገጽ <span id="currentPage">1</span> / <span id="totalPages">1</span></span>
+                    <button id="nextPage">ቀጣይ ▶</button>
+                </div>
+            </div>
+
+            <!-- Favorites Panel -->
+            <div class="panel" id="favoritesPanel">
+                <div class="panel-title">
+                    ⭐ የተወደዱ
+                    <div>
+                        <button class="export-btn" id="exportFavorites">📤 ኤክስፖርት</button>
+                        <button class="clear-btn" id="clearFavorites">ሁሉን አጥፋ</button>
+                    </div>
+                </div>
+                <div id="favoritesList"></div>
+            </div>
+
+            <!-- History Panel -->
+            <div class="panel" id="historyPanel">
+                <div class="panel-title">
+                    🕐 ታሪክ
+                    <button class="clear-btn" id="clearHistory">ሁሉን አጥፋ</button>
+                </div>
+                <div id="historyList"></div>
+            </div>
+        </div>
+
+        <!-- ===== TOAST ===== -->
+        <div class="toast" id="toast"></div>
+
+        <!-- ===== BOTTOM NAV ===== -->
+        <div class="bottom-nav">
+            <button class="nav-item active" data-panel="searchPanel">
+                <span class="icon">🔍</span>
+                ፈልግ
+            </button>
+            <button class="nav-item" data-panel="favoritesPanel">
+                <span class="icon">⭐</span>
+                ተወዳጅ
+            </button>
+            <button class="nav-item" data-panel="historyPanel">
+                <span class="icon">🕐</span>
+                ታሪክ
+            </button>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- LOAD DICTIONARY DATA                                         -->
+    <!-- ============================================================ -->
+    <script src="dictionary-data.js"></script>
+
+    <script>
+        // ================================================================
+        //  DICTIONARY ENGINE
+        // ================================================================
+
+        const dictionary = {};
+        let totalWords = 0;
+        let dataLoaded = false;
+
+        // Pagination
+        let currentPage = 1;
+        let pageSize = 20;
+        let currentResults = [];
+
+        // Flashcards
+        let flashcardWords = [];
+        let flashcardIndex = 0;
+        let isFlipped = false;
+
+        // Word of the Day
+        let wotdWord = null;
+
+        // Theme
+        let currentTheme = localStorage.getItem('dict_theme') || 'dark';
+
+        function buildDictionary(entries) {
+            for (const key in dictionary) {
+                delete dictionary[key];
+            }
+            totalWords = 0;
+
+            for (const entry of entries) {
+                const word = entry[0].toLowerCase();
+                const pos = entry[1] || '';
+                const root = entry[2] || '';
+                const meaning = entry[3] || '';
+                const amharic = entry[4] || '';
+
+                if (!dictionary[word]) {
+                    dictionary[word] = [];
+                }
+                dictionary[word].push({
+                    pos: pos,
+                    root: root,
+                    meaning: meaning,
+                    amharic: amharic,
+                    original: entry[0]
+                });
+                totalWords++;
+            }
+
+            const wordCount = Object.keys(dictionary).length;
+            document.getElementById('wordCountBadge').textContent = `${wordCount} ቃላት`;
+            dataLoaded = true;
+
+            console.log(`✅ Dictionary loaded: ${wordCount} unique words, ${totalWords} entries`);
+
+            // Hide upload area
+            document.getElementById('csvUploadArea').classList.add('hidden');
+            document.getElementById('uploadStatus').textContent = `✅ ${wordCount} ቃላት ተጭነዋል`;
+
+            // Init features
+            initWordOfTheDay();
+            initFlashcards();
+            showAllWords();
+        }
+
+        // ================================================================
+        //  CSV PARSER
+        // ================================================================
+
+        function parseCSV(text) {
+            const lines = text.split(/\r?\n/);
+            const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+
+            const wordIdx = headers.findIndex(h => h.toLowerCase() === 'word');
+            const posIdx = headers.findIndex(h => h.toLowerCase() === 'post');
+            const rootIdx = headers.findIndex(h => h.toLowerCase() === 'root');
+            const meaningIdx = headers.findIndex(h => h.toLowerCase() === 'meaning');
+            const amharicIdx = headers.findIndex(h => h.toLowerCase() === 'amharic');
+
+            if (wordIdx === -1 || amharicIdx === -1) {
+                throw new Error('CSV must have "word" and "Amharic" columns');
+            }
+
+            const entries = [];
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                const values = [];
+                let current = '';
+                let inQuotes = false;
+                for (let j = 0; j < line.length; j++) {
+                    const char = line[j];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                values.push(current.trim());
+
+                const word = (values[wordIdx] || '').replace(/^"|"$/g, '').trim();
+                const pos = (values[posIdx] || '').replace(/^"|"$/g, '').trim();
+                const root = (values[rootIdx] || '').replace(/^"|"$/g, '').trim();
+                const meaning = (values[meaningIdx] || '').replace(/^"|"$/g, '').trim();
+                const amharic = (values[amharicIdx] || '').replace(/^"|"$/g, '').trim();
+
+                if (word && amharic) {
+                    entries.push([word, pos, root, meaning, amharic]);
+                }
+            }
+            return entries;
+        }
+
+        // ================================================================
+        //  CSV FILE HANDLER
+        // ================================================================
+
+        document.getElementById('csvFileInput').addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const entries = parseCSV(event.target.result);
+                    if (entries.length === 0) {
+                        throw new Error('No valid entries found in CSV');
+                    }
+                    document.getElementById('uploadStatus').textContent = `⏳ ${entries.length} ቃላት እየተጫኑ ነው...`;
+                    buildDictionary(entries);
+                    showToast(`✅ ${entries.length} ቃላት ተጭነዋል`);
+                } catch (err) {
+                    document.getElementById('uploadStatus').textContent = `❌ ${err.message}`;
+                    document.getElementById('uploadStatus').className = 'upload-status error';
+                    showToast('❌ ፋይሉን ማንበብ አልተቻለም');
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        // ================================================================
+        //  APP STATE
+        // ================================================================
+
+        let currentFilter = 'all';
+        let searchQuery = '';
+        let currentLetter = '';
+        let favorites = JSON.parse(localStorage.getItem('dict_favorites_enhanced') || '[]');
+        let history = JSON.parse(localStorage.getItem('dict_history_enhanced') || '[]');
+
+        // ================================================================
+        //  DOM REFS
+        // ================================================================
+
+        const searchInput = document.getElementById('searchInput');
+        const resultsEl = document.getElementById('results');
+        const resultCount = document.getElementById('resultCount');
+        const resultStatus = document.getElementById('resultStatus');
+        const favoritesList = document.getElementById('favoritesList');
+        const historyList = document.getElementById('historyList');
+        const toast = document.getElementById('toast');
+        const prevPageBtn = document.getElementById('prevPage');
+        const nextPageBtn = document.getElementById('nextPage');
+        const currentPageEl = document.getElementById('currentPage');
+        const totalPagesEl = document.getElementById('totalPages');
+        const letterLabel = document.getElementById('letterLabel');
+        let toastTimeout = null;
+        let synth = window.speechSynthesis;
+
+        // ================================================================
+        //  THEME
+        // ================================================================
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('dict_theme', theme);
+            currentTheme = theme;
+            document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+
+        applyTheme(currentTheme);
+
+        // ================================================================
+        //  WORD OF THE DAY
+        // ================================================================
+
+        function initWordOfTheDay() {
+            const words = Object.keys(dictionary);
+            if (words.length === 0) return;
+
+            // Use date-based selection so it changes daily
+            const today = new Date().toDateString();
+            const storedDate = localStorage.getItem('wotd_date');
+            let word;
+
+            if (storedDate === today) {
+                word = localStorage.getItem('wotd_word');
+            } else {
+                const seed = today.split(' ').join('');
+                let hash = 0;
+                for (let i = 0; i < seed.length; i++) {
+                    hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+                    hash |= 0;
+                }
+                const index = Math.abs(hash) % words.length;
+                word = words[index];
+                localStorage.setItem('wotd_date', today);
+                localStorage.setItem('wotd_word', word);
+            }
+
+            wotdWord = word;
+            const entry = dictionary[word] ? dictionary[word][0] : null;
+            if (entry) {
+                document.getElementById('wotdWord').textContent = entry.original || word;
+                document.getElementById('wotdAmharic').textContent = entry.amharic || '';
+                document.getElementById('wotdMeaning').textContent = entry.meaning || '';
+                document.getElementById('wotdPos').textContent = entry.pos || '';
+                document.getElementById('wotdCard').dataset.word = word;
+            }
+        }
+
+        let wotdVisible = false;
+        document.getElementById('wotdToggle').addEventListener('click', function() {
+            wotdVisible = !wotdVisible;
+            document.getElementById('wotdContainer').style.display = wotdVisible ? 'block' : 'none';
+            this.classList.toggle('active');
+        });
+
+        // ================================================================
+        //  FLASHCARDS
+        // ================================================================
+
+        function initFlashcards() {
+            const words = Object.keys(dictionary);
+            flashcardWords = words.slice(0, 100);
+            flashcardIndex = 0;
+            updateFlashcard();
+        }
+
+        function updateFlashcard() {
+            if (flashcardWords.length === 0 || flashcardIndex >= flashcardWords.length) {
+                flashcardIndex = 0;
+            }
+            const word = flashcardWords[flashcardIndex];
+            const entry = dictionary[word] ? dictionary[word][0] : null;
+            if (entry) {
+                document.getElementById('fcWord').textContent = entry.original || word;
+                document.getElementById('fcPos').textContent = entry.pos || '';
+                document.getElementById('fcAmharic').textContent = entry.amharic || '';
+                document.getElementById('fcMeaning').textContent = entry.meaning || '';
+                document.getElementById('fcCounter').textContent = `${flashcardIndex + 1} / ${flashcardWords.length}`;
+            }
+            // Reset flip
+            document.getElementById('flashcard').classList.remove('flipped');
+            isFlipped = false;
+        }
+
+        function flipCard() {
+            isFlipped = !isFlipped;
+            document.getElementById('flashcard').classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            if (flashcardWords.length === 0) return;
+            flashcardIndex = (flashcardIndex + 1) % flashcardWords.length;
+            updateFlashcard();
+        }
+
+        function prevCard() {
+            if (flashcardWords.length === 0) return;
+            flashcardIndex = (flashcardIndex - 1 + flashcardWords.length) % flashcardWords.length;
+            updateFlashcard();
+        }
+
+        function shuffleCards() {
+            for (let i = flashcardWords.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [flashcardWords[i], flashcardWords[j]] = [flashcardWords[j], flashcardWords[i]];
+            }
+            flashcardIndex = 0;
+            updateFlashcard();
+            showToast('🔀 ቃላት ተቀላቅለዋል');
+        }
+
+        function resetFlashcards() {
+            const words = Object.keys(dictionary);
+            flashcardWords = words.slice(0, 100);
+            flashcardIndex = 0;
+            updateFlashcard();
+            showToast('🔄 ቃላት ወደ መጀመሪያ ተመልሰዋል');
+        }
+
+        let flashcardVisible = false;
+        document.getElementById('flashcardToggle').addEventListener('click', function() {
+            flashcardVisible = !flashcardVisible;
+            document.getElementById('flashcardContainer').style.display = flashcardVisible ? 'block' : 'none';
+            this.classList.toggle('active');
+            if (flashcardVisible) {
+                initFlashcards();
+                // Scroll to flashcard
+                document.getElementById('flashcardContainer').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        // Keyboard shortcuts for flashcards
+        document.addEventListener('keydown', function(e) {
+            if (flashcardVisible) {
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    e.preventDefault();
+                    nextCard();
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    prevCard();
+                } else if (e.key === 'f' || e.key === 'F') {
+                    flipCard();
+                }
+            }
+        });
+
+        // ================================================================
+        //  LETTER NAVIGATION (A-Z)
+        // ================================================================
+
+        document.querySelectorAll('.letter-nav button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const letter = this.dataset.letter;
+                document.querySelectorAll('.letter-nav button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                if (currentLetter === letter) {
+                    currentLetter = '';
+                    this.classList.remove('active');
+                    letterLabel.textContent = '';
+                    showAllWords();
+                    return;
+                }
+
+                currentLetter = letter;
+                letterLabel.textContent = `📌 ፊደል: ${letter.toUpperCase()}`;
+
+                // Filter words by starting letter
+                const words = Object.keys(dictionary).filter(w => w.startsWith(letter));
+                const results = [];
+                for (const word of words) {
+                    const entries = dictionary[word];
+                    for (const entry of entries) {
+                        if (currentFilter === 'all' || entry.pos === currentFilter) {
+                            results.push({ word, ...entry });
+                        }
+                    }
+                }
+
+                currentResults = results;
+                currentPage = 1;
+                renderPage(results, 1);
+                updatePagination(results.length, 1);
+                resultCount.textContent = results.length;
+                resultStatus.textContent = `📌 ${letter.toUpperCase()} - ${results.length} ቃላት`;
+            });
+        });
+
+        // ================================================================
+        //  FILTERS
+        // ================================================================
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                currentPage = 1;
+                if (searchQuery) {
+                    performSearch(searchQuery);
+                } else if (currentLetter) {
+                    // Re-apply letter filter
+                    const letter = currentLetter;
+                    const words = Object.keys(dictionary).filter(w => w.startsWith(letter));
+                    const results = [];
+                    for (const word of words) {
+                        const entries = dictionary[word];
+                        for (const entry of entries) {
+                            if (currentFilter === 'all' || entry.pos === currentFilter) {
+                                results.push({ word, ...entry });
+                            }
+                        }
+                    }
+                    currentResults = results;
+                    currentPage = 1;
+                    renderPage(results, 1);
+                    updatePagination(results.length, 1);
+                    resultCount.textContent = results.length;
+                    resultStatus.textContent = `📌 ${letter.toUpperCase()} - ${results.length} ቃላት`;
+                } else {
+                    showAllWords();
+                }
+            });
+        });
+
+        // ================================================================
+        //  PAGINATION
+        // ================================================================
+
+        function renderPage(results, page) {
+            const start = (page - 1) * pageSize;
+            const end = start + pageSize;
+            const pageItems = results.slice(start, end);
+
+            if (pageItems.length === 0 && page > 1) {
+                currentPage = page - 1;
+                renderPage(results, currentPage);
+                return;
+            }
+
+            displayResults(pageItems, results.length, page);
+        }
+
+        function updatePagination(total, page) {
+            const totalPages = Math.ceil(total / pageSize);
+            currentPageEl.textContent = page;
+            totalPagesEl.textContent = totalPages || 1;
+            prevPageBtn.disabled = page <= 1;
+            nextPageBtn.disabled = page >= totalPages;
+        }
+
+        prevPageBtn.addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentResults, currentPage);
+                document.getElementById('searchPanel').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        nextPageBtn.addEventListener('click', function() {
+            const totalPages = Math.ceil(currentResults.length / pageSize);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage(currentResults, currentPage);
+                document.getElementById('searchPanel').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        // ================================================================
+        //  SEARCH
+        // ================================================================
+
+        function performSearch(query) {
+            searchQuery = query.trim().toLowerCase();
+            const results = [];
+
+            if (searchQuery === '' || !dataLoaded) {
+                showAllWords();
+                return;
+            }
+
+            const words = Object.keys(dictionary);
+            for (const word of words) {
+                const entries = dictionary[word];
+                for (const entry of entries) {
+                    const matchWord = word.includes(searchQuery) || searchQuery.includes(word);
+                    const matchMeaning = entry.meaning && entry.meaning.toLowerCase().includes(searchQuery);
+                    const matchAmharic = entry.amharic && entry.amharic.includes(searchQuery);
+
+                    if (matchWord || matchMeaning || matchAmharic) {
+                        if (currentFilter === 'all' || entry.pos === currentFilter) {
+                            results.push({ word, ...entry });
+                        }
+                    }
+                }
+            }
+
+            // Clear letter selection when searching
+            if (searchQuery) {
+                document.querySelectorAll('.letter-nav button').forEach(b => b.classList.remove('active'));
+                currentLetter = '';
+                letterLabel.textContent = '';
+            }
+
+            currentResults = results;
+            currentPage = 1;
+            renderPage(results, 1);
+            updatePagination(results.length, 1);
+            resultCount.textContent = results.length;
+            resultStatus.textContent = `${results.length} ውጤቶች`;
+        }
+
+        function showAllWords() {
+            if (!dataLoaded || Object.keys(dictionary).length === 0) {
+                resultsEl.innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <div class="text">ቃላት እየተጫኑ ነው...</div>
+                    </div>
+                `;
+                resultCount.textContent = '0';
+                resultStatus.textContent = 'ፈልግ';
+                document.getElementById('pagination').style.display = 'none';
+                return;
+            }
+
+            const results = [];
+            const words = Object.keys(dictionary);
+            for (const word of words) {
+                const entries = dictionary[word];
+                for (const entry of entries) {
+                    if (currentFilter === 'all' || entry.pos === currentFilter) {
+                        results.push({ word, ...entry });
+                    }
+                }
+            }
+
+            currentResults = results;
+            currentPage = 1;
+            renderPage(results, 1);
+            updatePagination(results.length, 1);
+            resultCount.textContent = results.length;
+            resultStatus.textContent = `ሁሉም ቃላት`;
+            document.getElementById('pagination').style.display = results.length > pageSize ? 'flex' : 'none';
+        }
+
+        function displayResults(results, total, page) {
+            if (results.length === 0) {
+                resultsEl.innerHTML = `
+                    <div class="no-result">
+                        <div class="icon">😕</div>
+                        <div class="text">ምንም ቃላት አልተገኙም</div>
+                        <div style="color:var(--text-muted);font-size:13px;margin-top:4px;opacity:0.6;">ሌላ ቃል ይሞክሩ</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            for (const r of results) {
+                const isFav = favorites.includes(r.word);
+                const displayWord = r.original || r.word;
+
+                html += `
+                    <div class="result-card">
+                        <div class="word-row">
+                            <span class="word">${displayWord}</span>
+                            <span class="pos">${r.pos || ''}</span>
+                        </div>
+                        <div class="amharic">${r.amharic || 'ትርጉም የለም'}</div>
+                        ${r.meaning ? `<div class="meaning">${r.meaning}</div>` : ''}
+                        ${r.root ? `<div class="root">📎 ሥር: ${r.root}</div>` : ''}
+                        <div class="actions">
+                            <button class="action-btn ${isFav ? 'fav' : ''}" onclick="toggleFavorite('${r.word}')">
+                                ${isFav ? '⭐' : '☆'} ተወዳጅ
+                            </button>
+                            <button class="action-btn" onclick="speakWord('${displayWord}')">🔊 አንብብ</button>
+                            <button class="action-btn" onclick="copyText('${r.amharic || ''}')">📋 ቅዳ</button>
+                            <button class="action-btn" onclick="shareWord('${r.word}')">📤 አጋራ</button>
+                        </div>
+                    </div>
+                `;
+            }
+            resultsEl.innerHTML = html;
+            document.getElementById('pagination').style.display = total > pageSize ? 'flex' : 'none';
+        }
+
+        // ================================================================
+        //  TEXT-TO-SPEECH (Voice Pronunciation)
+        // ================================================================
+
+        function speakWord(word) {
+            if (!synth) {
+                showToast('⚠️ የድምጽ ማጫወቻ አይደገፍም');
+                return;
+            }
+
+            synth.cancel();
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
+
+            utterance.onstart = () => showToast(`🔊 ${word}`);
+            utterance.onerror = () => showToast('⚠️ ድምጽ ማጫወት አልተቻለም');
+
+            synth.speak(utterance);
+        }
+
+        // ================================================================
+        //  NAVIGATION
+        // ================================================================
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const panelId = this.dataset.panel;
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                this.classList.add('active');
+
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                document.getElementById(panelId).classList.add('active');
+
+                if (panelId === 'favoritesPanel') renderFavorites();
+                if (panelId === 'historyPanel') renderHistory();
+            });
+        });
+
+        // ================================================================
+        //  FAVORITES
+        // ================================================================
+
+        function toggleFavorite(word) {
+            const index = favorites.indexOf(word);
+            if (index > -1) {
+                favorites.splice(index, 1);
+                showToast('⭐ ከተወዳጆች ተወግዷል');
+            } else {
+                favorites.push(word);
+                showToast('⭐ ወደ ተወዳጅ ተጨምሯል');
+            }
+            localStorage.setItem('dict_favorites_enhanced', JSON.stringify(favorites));
+            if (searchQuery) performSearch(searchQuery);
+            renderFavorites();
+        }
+
+        function renderFavorites() {
+            if (favorites.length === 0) {
+                favoritesList.innerHTML = `
+                    <div class="empty-panel">
+                        <div class="icon">⭐</div>
+                        <div class="text">ምንም የተወደዱ ቃላት የሉም</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            for (const word of favorites) {
+                const entries = dictionary[word];
+                if (entries) {
+                    for (const e of entries) {
+                        const displayWord = e.original || word;
+                        html += `
+                            <div class="list-item" onclick="searchWord('${word}')">
+                                <span class="word">${displayWord}</span>
+                                <span class="meaning">${e.amharic || ''}</span>
+                                <button class="remove-btn" onclick="event.stopPropagation(); toggleFavorite('${word}')">✕</button>
+                            </div>
+                        `;
+                        break;
+                    }
+                }
+            }
+            favoritesList.innerHTML = html || '<div class="empty-panel"><div class="text">ቃላት የሉም</div></div>';
+        }
+
+        document.getElementById('clearFavorites').addEventListener('click', function() {
+            if (confirm('ሁሉንም የተወደዱ ቃላት ማጥፋት ይፈልጋሉ?')) {
+                favorites = [];
+                localStorage.setItem('dict_favorites_enhanced', JSON.stringify(favorites));
+                renderFavorites();
+                showToast('ሁሉም ተወዳጅ ቃላት ተወግደዋል');
+            }
+        });
+
+        // ================================================================
+        //  EXPORT FAVORITES AS CSV
+        // ================================================================
+
+        document.getElementById('exportFavorites').addEventListener('click', function() {
+            if (favorites.length === 0) {
+                showToast('⚠️ ምንም የተወደዱ ቃላት የሉም');
+                return;
+            }
+
+            let csv = 'word,pos,root,meaning,amharic\n';
+            for (const word of favorites) {
+                const entries = dictionary[word];
+                if (entries) {
+                    for (const e of entries) {
+                        csv +=
+                            `"${e.original || word}","${e.pos || ''}","${e.root || ''}","${e.meaning || ''}","${e.amharic || ''}"\n`;
+                        break;
+                    }
+                }
+            }
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `favorites_${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+
+            showToast(`📤 ${favorites.length} ቃላት ተኤክስፖርት ተደርገዋል`);
+        });
+
+        // ================================================================
+        //  HISTORY
+        // ================================================================
+
+        function addToHistory(word) {
+            if (!history.includes(word)) {
+                history.unshift(word);
+                if (history.length > 50) history.pop();
+                localStorage.setItem('dict_history_enhanced', JSON.stringify(history));
+            }
+        }
+
+        function renderHistory() {
+            if (history.length === 0) {
+                historyList.innerHTML = `
+                    <div class="empty-panel">
+                        <div class="icon">🕐</div>
+                        <div class="text">ምንም የፍለጋ ታሪክ የለም</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            for (const word of history) {
+                const entries = dictionary[word];
+                if (entries) {
+                    for (const e of entries) {
+                        const displayWord = e.original || word;
+                        html += `
+                            <div class="list-item" onclick="searchWord('${word}')">
+                                <span class="word">${displayWord}</span>
+                                <span class="meaning">${e.amharic || ''}</span>
+                                <button class="remove-btn" onclick="event.stopPropagation(); removeHistory('${word}')">✕</button>
+                            </div>
+                        `;
+                        break;
+                    }
+                }
+            }
+            historyList.innerHTML = html || '<div class="empty-panel"><div class="text">ቃላት የሉም</div></div>';
+        }
+
+        function removeHistory(word) {
+            const index = history.indexOf(word);
+            if (index > -1) {
+                history.splice(index, 1);
+                localStorage.setItem('dict_history_enhanced', JSON.stringify(history));
+                renderHistory();
+            }
+        }
+
+        document.getElementById('clearHistory').addEventListener('click', function() {
+            if (confirm('ሁሉንም የፍለጋ ታሪክ ማጥፋት ይፈልጋሉ?')) {
+                history = [];
+                localStorage.setItem('dict_history_enhanced', JSON.stringify(history));
+                renderHistory();
+                showToast('ታሪክ ተጠርጓል');
+            }
+        });
+
+        // ================================================================
+        //  SEARCH SUGGESTIONS (as you type)
+        // ================================================================
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            if (query.length > 0) {
+                performSearch(query);
+            } else {
+                showAllWords();
+            }
+        });
+
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query && dataLoaded) {
+                    addToHistory(query);
+                    performSearch(query);
+                }
+            }
+        });
+
+        // ================================================================
+        //  UTILITY FUNCTIONS
+        // ================================================================
+
+        function searchWord(word) {
+            searchInput.value = word;
+            if (dataLoaded) {
+                addToHistory(word);
+                performSearch(word);
+            }
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector('[data-panel="searchPanel"]').classList.add('active');
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('searchPanel').classList.add('active');
+        }
+
+        function copyText(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('📋 ተቀድቷል!');
+                }).catch(() => {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('📋 ተቀድቷል!');
+            } catch (e) {
+                showToast('⚠️ መቅዳት አልተቻለም');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function shareWord(word) {
+            const entries = dictionary[word];
+            if (!entries) return;
+            const entry = entries[0];
+            const displayWord = entry.original || word;
+            const text =
+                `${displayWord} (${entry.pos || ''}): ${entry.amharic || ''}${entry.meaning ? ' - ' + entry.meaning : ''}`;
+            if (navigator.share) {
+                navigator.share({ title: displayWord, text: text }).catch(() => {});
+            } else {
+                copyText(text);
+                showToast('📋 ለመጋራት ተቀድቷል');
+            }
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // ================================================================
+        //  LOAD DATA FROM EXTERNAL FILE
+        // ================================================================
+
+        if (typeof DICTIONARY_DATA !== 'undefined' && DICTIONARY_DATA.length > 0) {
+            buildDictionary(DICTIONARY_DATA);
+            document.getElementById('uploadStatus').textContent =
+                `✅ ${DICTIONARY_DATA.length} ቃላት ተጭነዋል (ከ dictionary-data.js)`;
+            document.getElementById('uploadStatus').className = 'upload-status';
+        } else {
+            resultsEl.innerHTML = `
+                <div class="no-result">
+                    <div class="icon">📂</div>
+                    <div class="text">የውሂብ ፋይል አልተገኘም</div>
+                    <div style="color:var(--text-muted);font-size:13px;margin-top:4px;opacity:0.6;">እባክዎ የ CSV ፋይልዎን ያስገቡ</div>
+                </div>
+            `;
+            document.getElementById('pagination').style.display = 'none';
+            console.warn('⚠️ DICTIONARY_DATA not found. Please upload a CSV file.');
+        }
+
+        // ================================================================
+        //  INIT
+        // ================================================================
+
+        setTimeout(() => {
+            renderFavorites();
+            renderHistory();
+            searchInput.focus();
+        }, 300);
+
+        console.log('📖 Enhanced Dictionary App loaded!');
+        console.log(`📚 ${Object.keys(dictionary).length} words available`);
+        console.log('✨ Features: Theme Toggle, Word of the Day, Flashcards, Export Favorites, A-Z Navigation, Voice TTS');
+    </script>
+
+</body>
+</html>
