@@ -955,27 +955,45 @@
             display: none !important;
         }
 
-        /* GitHub loading status */
-        .github-status {
+        /* ============================
+               DATA SOURCE STATUS
+            ============================ */
+        .data-status {
             font-size: 12px;
-            color: var(--text-muted);
-            padding: 4px 12px;
+            padding: 4px 14px;
             border-radius: 20px;
-            background: var(--filter-bg);
             display: inline-block;
             margin-bottom: 10px;
+            background: var(--filter-bg);
+            color: var(--text-muted);
         }
 
-        .github-status.loading {
+        .data-status.loading {
             color: var(--accent);
+            border: 1px solid rgba(247, 151, 30, 0.2);
         }
 
-        .github-status.success {
+        .data-status.github {
             color: #2ed573;
+            border: 1px solid rgba(46, 213, 115, 0.2);
         }
 
-        .github-status.error {
+        .data-status.local {
+            color: #4fc3f7;
+            border: 1px solid rgba(79, 195, 247, 0.2);
+        }
+
+        .data-status.error {
             color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .sidebar-footer .source-badge {
+            font-size: 10px;
+            color: var(--text-muted);
+            opacity: 0.7;
+            display: block;
+            margin-top: 4px;
         }
     </style>
 </head>
@@ -1008,8 +1026,8 @@
         </div>
 
         <div class="sidebar-footer">
-            ከ GitHub በራስ-ሰር ይጫናል<br>
-            <span id="githubStatus" class="github-status loading">⏳ እየተጫነ...</span>
+            <span id="sourceIndicator">📡 እየተጫነ...</span>
+            <span class="source-badge" id="sourceDetail">መረጃ እየተገኘ ነው</span>
         </div>
     </div>
 
@@ -1023,8 +1041,8 @@
             </div>
         </div>
 
-        <!-- GitHub Status -->
-        <div id="githubStatusBar" class="github-status loading">⏳ ከ GitHub እየተጫነ...</div>
+        <!-- Data Source Status -->
+        <div id="dataStatusBar" class="data-status loading">⏳ እየተጫነ...</div>
 
         <!-- Search -->
         <div class="search-box">
@@ -1148,9 +1166,10 @@
 
     <script>
         // ================================================================
-        //  CONFIGURATION - YOUR GITHUB CSV URL
+        //  CONFIGURATION
         // ================================================================
 
+        // Your GitHub CSV URL
         const CSV_URL = 'https://raw.githubusercontent.com/mulatakebede/dictionary-app/main/wordWebDic.csv';
 
         // ================================================================
@@ -1160,6 +1179,7 @@
         const dictionary = {};
         let totalWords = 0;
         let dataLoaded = false;
+        let dataSource = 'none'; // 'github' or 'local'
 
         // Pagination
         let currentPage = 1;
@@ -1181,14 +1201,14 @@
         let currentFilter = 'all';
         let searchQuery = '';
         let currentLetter = '';
-        let favorites = JSON.parse(localStorage.getItem('dict_favorites_sidebar') || '[]');
-        let history = JSON.parse(localStorage.getItem('dict_history_sidebar') || '[]');
+        let favorites = JSON.parse(localStorage.getItem('dict_favorites_dual') || '[]');
+        let history = JSON.parse(localStorage.getItem('dict_history_dual') || '[]');
 
         // ================================================================
         //  BUILD DICTIONARY
         // ================================================================
 
-        function buildDictionary(entries) {
+        function buildDictionary(entries, source) {
             for (const key in dictionary) {
                 delete dictionary[key];
             }
@@ -1217,24 +1237,44 @@
             const wordCount = Object.keys(dictionary).length;
             document.getElementById('wordCountBadge').textContent = `${wordCount} ቃላት`;
             dataLoaded = true;
+            dataSource = source || 'local';
 
-            console.log(`✅ Dictionary built: ${wordCount} unique words, ${totalWords} entries`);
+            console.log(`✅ Dictionary built: ${wordCount} unique words, ${totalWords} entries from ${dataSource}`);
 
-            // Update GitHub status
-            const statusEl = document.getElementById('githubStatus');
-            const statusBar = document.getElementById('githubStatusBar');
-            if (statusEl) {
-                statusEl.textContent = `✅ ${wordCount} ቃላት ተጭነዋል`;
-                statusEl.className = 'github-status success';
-            }
-            if (statusBar) {
-                statusBar.textContent = `✅ ከ GitHub ${wordCount} ቃላት ተጭነዋል`;
-                statusBar.className = 'github-status success';
-            }
+            // Update status
+            updateStatus(wordCount, dataSource);
+            showToast(`✅ ${wordCount} ቃላት ተጭነዋል (${dataSource === 'github' ? 'ከGitHub' : 'ከአካባቢ'})`);
 
             initWordOfTheDay();
             initFlashcards();
             showAllWords();
+        }
+
+        // ================================================================
+        //  UPDATE STATUS INDICATOR
+        // ================================================================
+
+        function updateStatus(wordCount, source) {
+            const statusBar = document.getElementById('dataStatusBar');
+            const sourceIndicator = document.getElementById('sourceIndicator');
+            const sourceDetail = document.getElementById('sourceDetail');
+
+            if (source === 'github') {
+                statusBar.textContent = `✅ ${wordCount} ቃላት ከ GitHub ተጭነዋል`;
+                statusBar.className = 'data-status github';
+                sourceIndicator.textContent = '📡 GitHub';
+                sourceDetail.textContent = `${wordCount} ቃላት · በራስ-ሰር ይጫናል`;
+            } else if (source === 'local') {
+                statusBar.textContent = `📚 ${wordCount} ቃላት ከ አካባቢ ተጭነዋል`;
+                statusBar.className = 'data-status local';
+                sourceIndicator.textContent = '💾 አካባቢ';
+                sourceDetail.textContent = `${wordCount} ቃላት · ከ dictionary-data.js`;
+            } else {
+                statusBar.textContent = '❌ ምንም ውሂብ አልተገኘም';
+                statusBar.className = 'data-status error';
+                sourceIndicator.textContent = '❌ ስህተት';
+                sourceDetail.textContent = 'እባክዎ ውሂብ ያስገቡ';
+            }
         }
 
         // ================================================================
@@ -1254,7 +1294,6 @@
                 meaningIdx = 3,
                 amharicIdx = 4;
 
-            // Try to find headers
             if (firstLine.includes('word') && firstLine.includes('amharic')) {
                 const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
                 wordIdx = headers.findIndex(h => h === 'word');
@@ -1303,23 +1342,13 @@
         //  LOAD FROM GITHUB
         // ================================================================
 
-        async function loadDictionaryFromGitHub() {
-            const statusEl = document.getElementById('githubStatus');
-            const statusBar = document.getElementById('githubStatusBar');
+        async function loadFromGitHub() {
+            const statusBar = document.getElementById('dataStatusBar');
+            statusBar.textContent = '⏳ ከ GitHub እየተጫነ...';
+            statusBar.className = 'data-status loading';
 
             try {
-                console.log('📥 Loading dictionary from GitHub...');
-                console.log(`📥 URL: ${CSV_URL}`);
-
-                if (statusEl) {
-                    statusEl.textContent = '⏳ እየተጫነ...';
-                    statusEl.className = 'github-status loading';
-                }
-                if (statusBar) {
-                    statusBar.textContent = '⏳ ከ GitHub እየተጫነ...';
-                    statusBar.className = 'github-status loading';
-                }
-
+                console.log('📥 Loading from GitHub:', CSV_URL);
                 const response = await fetch(CSV_URL);
 
                 if (!response.ok) {
@@ -1334,39 +1363,26 @@
                 }
 
                 console.log(`✅ Loaded ${entries.length} words from GitHub`);
-                buildDictionary(entries);
-                showToast(`✅ ${entries.length} ቃላት ተጭነዋል (ከGitHub)`);
+                buildDictionary(entries, 'github');
+                return true;
 
             } catch (error) {
-                console.error('❌ Failed to load from GitHub:', error);
-                if (statusEl) {
-                    statusEl.textContent = '❌ ከGitHub አልተገኘም';
-                    statusEl.className = 'github-status error';
-                }
-                if (statusBar) {
-                    statusBar.textContent = '❌ ከGitHub መጫን አልተቻለም';
-                    statusBar.className = 'github-status error';
-                }
-                showToast('⚠️ ከGitHub መጫን አልተቻለም');
-                // Fallback to local data
-                loadLocalData();
+                console.error('❌ GitHub load failed:', error);
+                statusBar.textContent = '⚠️ ከGitHub አልተገኘም, ከአካባቢ እየተጫነ...';
+                statusBar.className = 'data-status error';
+                return false;
             }
         }
 
         // ================================================================
-        //  LOAD FROM LOCAL (dictionary-data.js fallback)
+        //  LOAD FROM LOCAL (dictionary-data.js)
         // ================================================================
 
-        function loadLocalData() {
+        function loadFromLocal() {
             if (typeof DICTIONARY_DATA !== 'undefined' && DICTIONARY_DATA.length > 0) {
                 console.log(`📚 Using local data: ${DICTIONARY_DATA.length} words`);
-                buildDictionary(DICTIONARY_DATA);
-                showToast(`📚 ${DICTIONARY_DATA.length} ቃላት ተጭነዋል (ከአካባቢ)`);
-                const statusEl = document.getElementById('githubStatus');
-                if (statusEl) {
-                    statusEl.textContent = `📚 ${DICTIONARY_DATA.length} ቃላት (ከአካባቢ)`;
-                    statusEl.className = 'github-status';
-                }
+                buildDictionary(DICTIONARY_DATA, 'local');
+                return true;
             } else {
                 console.warn('⚠️ No local data found');
                 document.getElementById('results').innerHTML = `
@@ -1374,10 +1390,31 @@
                         <div class="icon">📂</div>
                         <div class="text">ምንም ውሂብ አልተገኘም</div>
                         <div style="color:var(--text-muted);font-size:13px;margin-top:4px;opacity:0.6;">
-                            እባክዎ የCSV ፋይልዎን በGitHub ላይ ያስቀምጡ
+                            እባክዎ የCSV ፋይልዎን በGitHub ላይ ያስቀምጡ<br>
+                            ወይም dictionary-data.js ያስገቡ
                         </div>
                     </div>
                 `;
+                updateStatus(0, 'none');
+                return false;
+            }
+        }
+
+        // ================================================================
+        //  LOAD DATA - TRY GITHUB FIRST, FALLBACK TO LOCAL
+        // ================================================================
+
+        async function loadData() {
+            const statusBar = document.getElementById('dataStatusBar');
+            statusBar.textContent = '⏳ እየተጫነ...';
+            statusBar.className = 'data-status loading';
+
+            // Try GitHub first
+            const githubSuccess = await loadFromGitHub();
+
+            // If GitHub fails, load from local
+            if (!githubSuccess) {
+                loadFromLocal();
             }
         }
 
@@ -1469,7 +1506,6 @@
                 if (panelId === 'historyPanel') renderHistory();
                 if (panelId === 'flashcardPanel') initFlashcards();
 
-                // Close sidebar on mobile
                 if (window.innerWidth <= 768) {
                     document.getElementById('sidebar').classList.remove('open');
                 }
@@ -1484,7 +1520,6 @@
             document.getElementById('sidebar').classList.toggle('open');
         });
 
-        // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(e) {
             if (window.innerWidth <= 768) {
                 const sidebar = document.getElementById('sidebar');
@@ -1891,7 +1926,7 @@
                 favorites.push(word);
                 showToast('⭐ ወደ ተወዳጅ ተጨምሯል');
             }
-            localStorage.setItem('dict_favorites_sidebar', JSON.stringify(favorites));
+            localStorage.setItem('dict_favorites_dual', JSON.stringify(favorites));
             if (searchQuery) performSearch(searchQuery);
             renderFavorites();
         }
@@ -1931,7 +1966,7 @@
         document.getElementById('clearFavorites').addEventListener('click', function() {
             if (confirm('ሁሉንም የተወደዱ ቃላት ማጥፋት ይፈልጋሉ?')) {
                 favorites = [];
-                localStorage.setItem('dict_favorites_sidebar', JSON.stringify(favorites));
+                localStorage.setItem('dict_favorites_dual', JSON.stringify(favorites));
                 renderFavorites();
                 showToast('ሁሉም ተወዳጅ ቃላት ተወግደዋል');
             }
@@ -1972,7 +2007,7 @@
             if (!history.includes(word)) {
                 history.unshift(word);
                 if (history.length > 50) history.pop();
-                localStorage.setItem('dict_history_sidebar', JSON.stringify(history));
+                localStorage.setItem('dict_history_dual', JSON.stringify(history));
             }
         }
 
@@ -2012,7 +2047,7 @@
             const index = history.indexOf(word);
             if (index > -1) {
                 history.splice(index, 1);
-                localStorage.setItem('dict_history_sidebar', JSON.stringify(history));
+                localStorage.setItem('dict_history_dual', JSON.stringify(history));
                 renderHistory();
             }
         }
@@ -2020,7 +2055,7 @@
         document.getElementById('clearHistory').addEventListener('click', function() {
             if (confirm('ሁሉንም የፍለጋ ታሪክ ማጥፋት ይፈልጋሉ?')) {
                 history = [];
-                localStorage.setItem('dict_history_sidebar', JSON.stringify(history));
+                localStorage.setItem('dict_history_dual', JSON.stringify(history));
                 renderHistory();
                 showToast('ታሪክ ተጠርጓል');
             }
@@ -2094,7 +2129,7 @@
         }
 
         // ================================================================
-        //  FALLBACK DATA (3 sample entries if GitHub fails)
+        //  FALLBACK DATA (3 sample entries)
         // ================================================================
 
         const DICTIONARY_DATA = [
@@ -2108,11 +2143,11 @@
         // ================================================================
 
         console.log('📖 Dictionary App starting...');
-        console.log(`📥 Loading from: ${CSV_URL}`);
-        console.log(`📚 Fallback: ${DICTIONARY_DATA.length} sample entries`);
+        console.log(`📥 GitHub URL: ${CSV_URL}`);
+        console.log(`📚 Local fallback: ${DICTIONARY_DATA.length} sample entries`);
 
-        // Try loading from GitHub
-        loadDictionaryFromGitHub();
+        // Load data (GitHub first, then local)
+        loadData();
 
         // Initialize UI after a moment
         setTimeout(() => {
@@ -2122,9 +2157,8 @@
         }, 500);
 
         console.log('✅ Dictionary App ready!');
-        console.log(`📚 ${Object.keys(dictionary).length} words available`);
+        console.log('✅ Dual data source: GitHub + Local fallback');
         console.log('✅ Sidebar with Install button ready!');
-        console.log('✅ Auto-loads from GitHub on every refresh!');
     </script>
 
 </body>
