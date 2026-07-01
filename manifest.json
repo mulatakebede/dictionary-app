@@ -1,21 +1,21 @@
 {
-  "name": "English-Amharic Dictionary",
-  "short_name": "Dictionary",
+  "name": "እንግሊዝኛ - አማርኛ መዝገበ ቃላት",
+  "short_name": "መዝገበ ቃላት",
   "description": "English to Amharic Dictionary with 5,116 words",
-  "start_url": "index.html",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#0f0c29",
   "theme_color": "#f7971e",
+  "background_color": "#0f0c29",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%23f7971e'/%3E%3Ctext x='256' y='340' font-size='280' text-anchor='middle' font-family='Arial'%3E📖%3C/text%3E%3C/svg%3E",
-      "sizes": "512x512",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='38' fill='%23f7971e'/%3E%3Ctext x='96' y='130' font-size='80' text-anchor='middle' font-family='Arial'%3E📖%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
       "type": "image/svg+xml"
     },
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='38' fill='%23f7971e'/%3E%3Ctext x='96' y='128' font-size='105' text-anchor='middle' font-family='Arial'%3E📖%3C/text%3E%3C/svg%3E",
-      "sizes": "192x192",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%23f7971e'/%3E%3Ctext x='256' y='340' font-size='200' text-anchor='middle' font-family='Arial'%3E📖%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
       "type": "image/svg+xml"
     }
   ]
